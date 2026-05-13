@@ -33,7 +33,7 @@ body {
     color: var(--texto);
     -webkit-font-smoothing: antialiased;
     /* Background Animado */
-    background: radial-gradient(circle at top right, var(--accent), #ffffff, var(--accent), #ffffff);
+    background: #C8DAA0;
     background-size: 400% 400%;
     animation: gradientBG 15s ease infinite;
 }

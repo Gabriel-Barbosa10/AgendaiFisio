@@ -84,7 +84,7 @@ window.onload = function() {
 
 
         // Validações 
-        if (!dados.nomeCadastro || dados.cpf.length !== 11 || !dados.emailCadastro.includes("@") || dados.senhaCadastro.length < 6) {
+        if (!dados.nomeCadastro || dados.cpf.length !== 11 || !dados.emailCadastro.includes("@") || dados.senhaCadastro.length < 8 ) {
             alert("⚠️ Preencha todos os campos corretamente!");
             el.erroDialog.showModal();
             return;

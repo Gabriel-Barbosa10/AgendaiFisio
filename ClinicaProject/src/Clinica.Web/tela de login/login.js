@@ -41,7 +41,7 @@ window.onload = function() {
             const cpfLimpio = inputCPF.value.replace(/\D/g, "");
             const senhaDigitada = inputSenha.value.trim();
             
-            if (cpfLimpio.length < 11 || senhaDigitada < 6) {
+            if (cpfLimpio.length < 11 || senhaDigitada < 8 ) {
                 alert("Por favor, preencha o CPF e a senha corretamente.");
                 return;
             }

@@ -21,7 +21,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--bg-gradient);
+    background: #C8DAA0;
     font-family: 'Inter', sans-serif;
 }
 
@@ -73,7 +73,9 @@ body {
     color: var(--texto-corpo);
     font-size: 0.95rem;
 }
-
+span.a{
+    color: #C8DAA0;
+}
 /* ============================================================
    FORMULÁRIOS & INPUTS
 ============================================================ */
@@ -190,7 +192,7 @@ body {
 }
 
 .auth-footer a {
-    color: var(--p-profissional);
+    color: #C8DAA0;
     text-decoration: none;
     font-weight: 700;
 }
