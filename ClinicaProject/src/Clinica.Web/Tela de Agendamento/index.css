@@ -51,16 +51,20 @@ body {
     color: var(--brand); 
     font-size: 2rem; 
     text-decoration: none; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 h1{
-    height: 100px;
+    height: 70px;
     padding: 0;
-    margin-left: 100px;
-    margin-inline: 100px;
+    margin: 0;
+    justify-content: space-between;
 
 }
 img{
     height: 60px;
+    width: auto;
 }
 
 /* MENU PERFIL (DROPDOWN ORGANIZADO) */
@@ -219,9 +223,11 @@ img{
     font-size: 1.5rem;
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: 0 10px 20px -5px var(--brand-soft);
+    
     text-decoration: #A7C27E;
-    display: flex; justify-content: center; align-items: center;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
 }
 
 .btn-agendar-main:hover, .btn-confirmar-full:hover { 

@@ -137,7 +137,7 @@ h2.titulo_login {
 }
 
 .auth-footer a {
-    color: var(--bg-dark);
+    color: var(--primary);
     text-decoration: none;
     font-weight: 700;
     transition: 0.3s;
@@ -154,4 +154,8 @@ h2.titulo_login {
 
 @media (max-width: 550px) {
     .login-box { aspect-ratio: auto; padding: 2.5rem 1.5rem; }
+}
+
+.arredondar-popup{
+    border-radius: 50px;
 }

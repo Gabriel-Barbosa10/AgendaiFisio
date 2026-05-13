@@ -1,3 +1,19 @@
+// INTERCEPTA O ALERT TRADICIONAL E CONVERTE EM POPUP MODERNO
+window.alert = function (mensagemErros) {
+    // Agora o Swal sempre estará disponível instantaneamente
+    Swal.fire({
+        text: mensagemErros,
+        icon: 'error',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#C8DAA0', 
+        background: '#ffffff',
+        border: 'none',
+        customClass: {
+            popup: 'arredondar-popup',
+        }
+    });
+};
+
 window.onload = function() {
     const btnEntrar = document.getElementById("btnEntrar");
     const inputCPF = document.getElementById("cpfLogin");
@@ -25,7 +41,7 @@ window.onload = function() {
             const cpfLimpio = inputCPF.value.replace(/\D/g, "");
             const senhaDigitada = inputSenha.value.trim();
             
-            if (cpfLimpio.length < 11 || senhaDigitada === "") {
+            if (cpfLimpio.length < 11 || senhaDigitada < 6) {
                 alert("Por favor, preencha o CPF e a senha corretamente.");
                 return;
             }
