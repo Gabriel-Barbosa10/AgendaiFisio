@@ -1,14 +1,16 @@
 window.onload = function() {
     const el = {
         btnCadastrar: document.getElementById("btnCadastrar"),
-        inputNome: document.getElementById("nomeCadastro"),
-        inputCPF: document.getElementById("cpf"),
-        inputEmail: document.getElementById("emailCadastro"),
-        inputSenha: document.getElementById("senhaCadastro"),
+        inputNomeCadastro: document.getElementById("nomeCadastro"),
+        inputCPFCadastro: document.getElementById("cpfCadastro"),
+        inputEmailCadastro: document.getElementById("emailCadastro"),
+        inputSenhaCadastro: document.getElementById("senhaCadastro"),
         checkLGPD: document.getElementById("checkLGPD"), // Novo elemento
         URL_API: "http://localhost:8000/register",
-        dialog: document.getElementById("modalSucessoCadastro"),
-        btnRedirecionar: document.getElementById("btnRedirecionar")
+        sucessoModal: document.getElementById("modalSucessoCadastro"),
+        btnRedirecionar: document.getElementById("btnRedirecionar"),
+        dialogTerapeuta: document.getElementById("btnCadastrar"),
+        erroDialog: document.getElementById("modalErro")
     };
 
     // --- 1. MÁSCARA DE CPF (Lógica Funcional) ---
@@ -21,10 +23,10 @@ window.onload = function() {
             .substring(0, 14); // Limita o tamanho total
     };
 
-    if (el.inputCPF) {
-        el.inputCPF.addEventListener("input", (e) => {
+    if (el.inputCPFCadastro) {
+        el.inputCPFCadastro.addEventListener("input", (e) => {
             e.target.value = aplicarMascaraCPF(e.target.value);
-            el.inputCPF.classList.remove("input-erro");
+            el.inputCPFCadastro.classList.remove("input-erro");
         });
     }
             function validarCPF(cpf) {
@@ -67,56 +69,56 @@ window.onload = function() {
     }
 
 
+
     // --- 3. ENVIO DO FORMULÁRIO ---
     const enviarCadastro = async () => {
+        const regexEmail =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
         const dados = {
-            nome: el.inputNome.value.trim(),
-            cpf: el.inputCPF.value.replace(/\D/g, ""), // Limpa para a API
-            email: el.inputEmail.value.trim(),
-            senha: el.inputSenha.value.trim()
+            nomeCadastro: el.inputNomeCadastro.value.trim(),
+            cpf: el.inputCPFCadastro.value.replace(/\D/g, ""), // Limpa para a API
+            emailCadastro: el.inputEmailCadastro.value.trim(),
+            senhaCadastro: el.inputSenhaCadastro.value.trim()
+
         };
 
-        // Validações
-        if (!dados.nome || dados.cpf.length !== 11 || !dados.email.includes("@") || dados.senha.length < 6) {
+
+
+        // Validações 
+        if (!dados.nomeCadastro || dados.cpf.length !== 11 || !dados.emailCadastro.includes("@") || dados.senhaCadastro.length < 6) {
             alert("⚠️ Preencha todos os campos corretamente!");
+            el.erroDialog.showModal();
             return;
         }
-
-        try {
-            const response = await fetch(el.URL_API, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dados)
-            });
-
-            if (response.ok) {
-                el.dialog.showModal();
-            } else {
-                const erro = await response.json();
-                alert(erro.detail || "Erro ao cadastrar.");
-                el.dialog.showModal();
-            }
-        } catch (err) {
-            console.error("Erro:", err);
-            alert("Erro ao conectar com o servidor.");
-            el.dialog.showModal();
+        if (el.sucessoModal){
+            el.sucessoModal.showModal();
         }
+
+        setTimeout(() => {
+            window.location.href = "/ClinicaProject/src/Clinica.Web/tela de login/login.html"
+        }, 3000);
+
+ 
+
     };
+    
     ///4. EVENTOS///
 
-    if (el.btnCadastrar) {
-        el.btnCadastrar.onclick = (e) => {
+if (el.btnCadastrar) {
+        // Usamos async aqui para garantir que ele espere a função terminar se houver uma API
+        el.btnCadastrar.onclick = async (e) => {
             e.preventDefault();
+            // Apenas chama a função. Toda a lógica de validar, 
+            // mostrar o modal e redirecionar está dentro dela.
             enviarCadastro();
         };
-
     }
-        if  (el.btnRedirecionar) {
-            el.btnRedirecionar.addEventListener("click", () =>{
-                el.dialog.close();
-                window.location.href = ("../tela de login/login.html");
+
+    if (el.btnRedirecionar) {
+        el.btnRedirecionar.addEventListener("click", () => {
+            // Caso o usuário clique no botão dentro do modal para ir mais rápido
+            window.location.href = "/ClinicaProject/src/Clinica.Web/tela de login/login.html";
         });
-        }
+    }
 };
 
 function selecionarPerfil(tipo) {

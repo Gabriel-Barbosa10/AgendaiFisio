@@ -21,21 +21,12 @@ body {
     padding: 0;
     height: 100vh;
     height: 100dvb;
-    background: radial-gradient(circle at top right, #A7C27E, #ffffff, #A7C27E, #ffffff);
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background: #C8DAA0;
     font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
     display: grid;
     place-items: center;
     overflow: hidden;
 }
-
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
 /* ============================================================
    CONTAINER QUADRADO MODERNO
 ============================================================ */
@@ -44,7 +35,9 @@ body {
     inline-size: 90%;
     max-inline-size: 500px;
     aspect-ratio: 1 / 1; 
-    padding: 3rem;
+    padding: 2.5rem;
+    margin: 100px;
+    height: 575px;
     border-radius: var(--radius-premium);
     box-shadow: var(--shadow-elegant);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -122,7 +115,7 @@ h2.titulo_login {
     padding: 1.2rem;
     border-radius: 16px;
     border: none;
-    background: var(--bg-dark);
+    background: var(--primary);
     color: #fff;
     font-weight: 700;
     cursor: pointer;

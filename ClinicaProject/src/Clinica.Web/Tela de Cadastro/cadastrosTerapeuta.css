@@ -3,6 +3,7 @@
     --brand-soft: oklch(60% 0.12 250 / 0.1);
     --texto: #0f172a;
     --fundo: #f1f5f9;
+    --t-terapeuta:  #A7C27E; 
 }
 
 body {
@@ -59,7 +60,7 @@ h2 { color: var(--texto); font-weight: 900; letter-spacing: -1px; }
 .btn-auth {
     width: 100%;
     padding: 18px;
-    background: var(--texto); /* Botão em cor neutra escura para seriedade */
+    background: #A7C27E; /* Botão em cor neutra escura para seriedade */
     color: white;
     border: none;
     border-radius: 10px;
@@ -68,4 +69,4 @@ h2 { color: var(--texto); font-weight: 900; letter-spacing: -1px; }
     transition: all 0.3s;
 }
 
-.btn-auth:hover { background: var(--brand); }
+.btn-auth:hover { background:  #A7C27E; }

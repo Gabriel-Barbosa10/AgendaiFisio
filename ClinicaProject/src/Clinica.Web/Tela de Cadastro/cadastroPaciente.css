@@ -57,6 +57,7 @@ h2 { color: var(--texto); font-weight: 800; text-align: center; margin-bottom: 2
 .btn-auth {
     width: 100%;
     padding: 16px;
+    margin-top: 10px;
     background: var(--brand);
     color: white;
     border: none;
@@ -66,5 +67,18 @@ h2 { color: var(--texto); font-weight: 800; text-align: center; margin-bottom: 2
     transition: transform 0.2s, filter 0.2s;
 }
 
-.btn-auth:hover { filter: brightness(0.9); transform: translateY(-2px); }
-.btn-auth:disabled { background: #cbd5e1; cursor: not-allowed; }
+.btn-auth:hover { 
+    filter: brightness(0.9); 
+    transform: translateY(-2px); 
+    padding: 16px;
+}
+.btn-auth:disabled { 
+    background: #cbd5e1; 
+    cursor: not-allowed; 
+}
+.modal-erro { 
+    border-top: 1px solid #ef4444; 
+}
+.modal-moderno { 
+    border-top: 1px solid #22c55e; 
+}

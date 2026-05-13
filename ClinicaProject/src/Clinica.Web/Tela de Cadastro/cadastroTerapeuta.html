@@ -21,27 +21,27 @@
             <form class="form-body">
                 <div class="input-group">
                     <label for="nome">Nome Completo</label>
-                    <input type="text" id="nome" placeholder="Digite seu nome completo" class="input-estilizado" required>
+                    <input type="text" id="nomeCadastro" placeholder="Digite seu nome completo" class="input-estilizado" required>
                 </div>
 
                 <div class="input-group">
-                    <label for="cpf">CPF</label>
-                    <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" class="input-estilizado" required>
+                    <label for="cpfCadastro">CPF</label>
+                    <input type="text" id="cpfCadastro" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="000.000.000-00" maxlength="14" class="input-estilizado">
                 </div>
 
                 <div class="input-group">
-                    <label for="especialidade">Registro Profissional (CRM/CRP)</label>
-                    <input type="text" id="especialidade" placeholder="Ex: Psicólogo - CRP 00/000" class="input-estilizado" required>
+                    <label for="especialidade">Registro Profissional (CREFITO)</label>
+                    <input type="text" id="crefitoReq" placeholder="EX: 123456-TO" maxlength="9" class="input-estilizado" required>
                 </div>
 
                 <div class="input-group">
                     <label for="email">E-mail Profissional</label>
-                    <input type="email" id="email" placeholder="seu@email.com" class="input-estilizado" required>
+                    <input type="email" id="emailCadastro" placeholder="seu@email.com" class="input-estilizado" required>
                 </div>
 
                 <div class="input-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senha" placeholder="Mínimo 6 caracteres" class="input-estilizado" required>
+                    <input type="password" id="senhaCadastro" maxlength="8" placeholder="Cadastre sua senha" class="input-estilizado" required>
                 </div>
 
                 <!-- Checkbox Customizado -->
@@ -55,9 +55,21 @@
 
                 <button type="button" id="btnCadastrar" class="btn-auth" disabled>Finalizar Cadastro</button>
             </form>
-            
+
+           <dialog id="modalSucessoCadastro" class="modal-moderno">
+                <h2>Cadastro com Sucesso</h2>
+                <p>Seu cadastro foi realizado com sucesso! Seja bem vindo ao nosso sistema.</p>
+                <button id="btnRedirecionar" href="../tela de login/login.html">Voltar ao Login</button>
+            </dialog>
+            <!-- NOVO: MODAL DE ERRO -->
+            <dialog id="mnodalErro" class="modal-erro">
+                <h2 style="color: #d32f2f;">Ops! Algo deu errado</h2>
+                <p id="mensagemErro">Verifique os dados preenchidos.</p>
+                <button onclick="this.closest('dialog').close()" class="btn-fechar">Tentar Novamente</button>
+            </dialog>
+           
             <footer class="auth-footer">
-                <span>Já possui conta? <a href="./login.html">Fazer Login</a></span>
+                <span>Já possui conta? <a href="../tela de login/login.html">Fazer Login</a></span>
             </footer>
         </div>
     </div>

@@ -67,7 +67,7 @@ body {
 /* CORES DINÂMICAS POR PERFIL */
 .indicador-cor { position: absolute; top: 0; left: 0; width: 100%; height: 8px; }
 .paciente .indicador-cor { background: var(--p-paciente); }
-.profissional .indicador-cor { background: var(--p-profissional); }
+.profissional .indicador-cor { background: var(--p-paciente); }
 
 /* BOTÕES (LINKS ESTILIZADOS) */
 .btn-selecionar {
@@ -77,9 +77,9 @@ body {
     border-radius: 16px;
     font-weight: 700;
     background: #f1f5f9;
-    color: var(--texto-titulo);
+    color: var(--p-paciente);
     transition: var(--transition);
 }
 
 .paciente:hover .btn-selecionar { background: var(--p-paciente); color: white; }
-.profissional:hover .btn-selecionar { background: var(--p-profissional); color: white; }
+.profissional:hover .btn-selecionar { background: var(--p-paciente); color: white; }

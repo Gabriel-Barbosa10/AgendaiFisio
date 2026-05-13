@@ -75,7 +75,7 @@ body {
     box-sizing: border-box;
     padding: 14px 18px;
     border-radius: 14px;
-    border: 2px solid var(--borda);
+    border: 1px solid var(--borda);
     background: #f8fafc;
     font-size: 1rem;
     transition: var(--transition);
@@ -94,7 +94,7 @@ body {
     padding: 18px;
     border-radius: 16px;
     border: none;
-    background: var(--texto-titulo);
+    background: #A7C27E;
     color: white;
     font-weight: 700;
     font-size: 1rem;

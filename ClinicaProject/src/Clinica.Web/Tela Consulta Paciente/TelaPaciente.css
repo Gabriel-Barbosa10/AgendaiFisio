@@ -34,7 +34,7 @@
 body {
     margin: 0;
     font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    background: radial-gradient(circle at top right, #A7C27E, #ffffff, #A7C27E, #ffffff);
+    background: #C8DAA0;
     background-size: 400% 400%;
     color: var(--texto);
     min-height: 100vh;
