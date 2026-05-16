@@ -1,19 +1,5 @@
 // ============================================================
-// 1. ESTADO GLOBAL
-// ============================================================
-const state = {
-    consultas: [
-        { nome: "Davi Gusmão", medico: "Ana Caroline (Psicóloga)", hora: "09:30", data: "25/10/2026" }
-    ],
-    consultasSemana: [
-        { nome: "Ana Beatriz", hora: "08:00", tipo: "Primeira Vez" },
-        { nome: "Carlos Eduardo", hora: "09:30", tipo: "Retorno" },
-        { nome: "Juliana Silva", hora: "11:00", tipo: "Avaliação" }
-    ]
-};
-
-// ============================================================
-// 2. ELEMENTOS
+// 1. ELEMENTOS
 // ============================================================
 const el = {
     grid: document.getElementById("gridConsultas"),
@@ -37,7 +23,8 @@ const el = {
     confirmMedico: document.getElementById("confirmMedico"),
     confirmDataHora: document.getElementById("confirmDataHora"),
 
-    nomePacienteProntuario: document.getElementById("nomePacienteProntuario"),
+
+    nomePacienteProntuario: document.getElementById("nomePacienteAgendado"),
     textoProntuario: document.getElementById("textoProntuario"),
     btnSalvarProntuario: document.getElementById("btnSalvarProntuario")
 };
@@ -288,3 +275,25 @@ const renderizarCards = () => {
         grid.appendChild(card);
     });
 };
+document.addEventListener("DOMContentLoaded", () => {
+    // Captura as referências dos elementos do seu card
+    const h2NomePaciente = document.getElementById("nomePacienteAgendado");
+    const labelTerapeuta = document.querySelector(".card-consulta .campo-selecao label");
+    
+    // Lê todas as informações da memória do navegador
+    const pacienteSalvo = localStorage.getItem("pacienteAgendado");
+    const dataSalva = localStorage.getItem("dataAgendada");
+    const horaSalva = localStorage.getItem("horaAgendada");
+    const profissionalSalvo = localStorage.getItem("profissionalAgendado");
+
+    // Se encontrou dados, injeta no card de forma organizada
+    if (pacienteSalvo && h2NomePaciente) {
+        h2NomePaciente.textContent = pacienteSalvo;
+    }
+    
+    if (profissionalSalvo && labelTerapeuta) {
+        // Exibe o nome do profissional e o horário/data no card
+        labelTerapeuta.innerHTML = `<strong>Profissional:</strong> ${profissionalSalvo} <br> 
+                                    <strong>Horário:</strong> ${dataSalva} às ${horaSalva}`;
+    }
+});

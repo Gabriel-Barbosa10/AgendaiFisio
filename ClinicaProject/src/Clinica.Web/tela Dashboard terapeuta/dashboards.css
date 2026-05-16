@@ -39,7 +39,6 @@ body {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
 }
-
 /* ============================================================
    3. ESTRUTURA (LAYOUT)
    ============================================================ */
@@ -86,6 +85,11 @@ nav a.active, nav a:hover {
     color: var(--bg-app); 
 }
 
+.relogio {
+    width: 30px;
+    height: 30px;
+}
+
 .user-info { 
     border-top: 1px solid var(--border); 
     padding-top: 2rem; 
@@ -96,13 +100,17 @@ nav a.active, nav a:hover {
 .main-content { 
     flex: 1; 
     padding: 3rem 4rem; 
+    display: flex;
+    flex-direction: column;
 }
 
+/* Cabeçalho Principal (CORRIGIDO: Propriedades duplicadas removidas) */
 .main-header { 
     display: flex; 
     justify-content: space-between; 
-    align-items: flex-start; 
+    align-items: center;            
     margin-bottom: 3rem; 
+    width: 100%;    
 }
 
 .main-header h1 { 
@@ -111,6 +119,51 @@ nav a.active, nav a:hover {
     letter-spacing: -1.5px; 
     margin: 0; 
 }
+
+/* Grupo do Título e Data */
+.title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Container do Input de Busca (Alinhado ao seu Design System) */
+.busca-container {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    width: 300px;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+}
+
+.busca-container:focus-within {
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.busca-icone {
+    font-size: 1.1rem;
+    margin-right: 10px;
+    opacity: 0.6;
+}
+
+#inputBuscaPaciente {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+#inputBuscaPaciente::placeholder {
+    color: var(--texto-muted);
+}
+
 
 /* ============================================================
    4. COMPONENTES (BOTÕES E CARDS)
@@ -174,22 +227,25 @@ nav a.active, nav a:hover {
 
 /* Cards de Consulta */
 .consultas-grid { 
-    display: grid; 
+    display: flex;
+    flex-wrap: wrap; 
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
     gap: 24px; 
 }
 
 .card-consulta { 
     background: var(--white); 
-    padding: 2rem; 
+    padding: 2.5rem; 
     border-radius: var(--radius-lg); 
     border: 1px solid var(--border); 
-    transition: var(--transition); 
+    transition: var(--transition);
+    border-color: var(--texto); 
 }
 
 .card-consulta:hover { 
-    border-color: var(--brand); 
+    border-color: var(--texto); 
     box-shadow: 0 20px 40px rgba(167, 194, 126, 0.2); 
+    box-shadow: 3px 3px var(--texto);
 }
 
 .btn-card-inline {
@@ -310,6 +366,15 @@ nav a.active, nav a:hover {
     width: 100%;
     border-radius: 10px;
     background: var(--accent);
+    font-size: 20px;
+    padding: 10px;
+    margin-top: 10px;
+}
+.btn-abrir-prontuario:hover{
+    color: var(--bg-app);
+    transform: scale(1.05); 
+    filter: brightness(1.0);
+    transition: var(--transition);
 }
 .modalProntuario{
     border: none;

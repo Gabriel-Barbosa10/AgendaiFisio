@@ -18,7 +18,7 @@
             <nav>
                 <a href="../tela Dashboard terapeuta/pacientesTerapeuta.html" class="active">📅 Consultas</a>
                 <a href="../Tela Terapeuta GERAL/TelaTerapeuta.html">👥 Pacientes</a>
-                <a href="#">⚙️ Configurações</a>
+                <a href="../Tela Terapeuta GERAL/TelaTerapeuta.html"> <img class="relogio" src="https://img.icons8.com/?size=100&id=hTkNBUtdmrxD&format=png&color=000000"> Bloqueio de horarios</a>
             </nav>
             <div class="user-info">
                 <strong>Davi Gusmão</strong>
@@ -27,36 +27,55 @@
         </aside>
 
         <!-- Área principal onde ficam os cards -->
+        <!-- Área principal onde ficam os cards -->
+        <!-- Área principal onde ficam os cards -->
         <main class="main-content">
+            
+            <!-- Cabeçalho (CORRIGIDO: Tag de abertura adicionada) -->
             <header class="main-header">
+                
                 <div class="title-group">
                     <h1>Consultas da Semana</h1>
                     <p id="currentDate">Carregando data...</p>
                 </div>
 
+                <!-- Bloco de filtros e ações no topo -->
                 <div class="acao-agendamento-topo">
-                
-
-                    </select>
+                    <div class="busca-container">
+                        <input 
+                            type="text" 
+                            id="inputBuscaPaciente" 
+                            placeholder="Pesquise o nome do seu paciente"
+                            autocomplete="off"
+                        >
+                    </div>
                 </div>
-            <article class="card-moderno card-fisioterapeuta">
-                <span class="badge">Paciente: </span>
-                <h2 id="nomePacienteAgendado">Nome do paceinte: </h2>
                 
-                <div class="campo-selecao">
-                    <label for="selectFisio">Terapeuta/Médico</label>
-                </div>
+            </header> <!-- Fechamento correto do header -->
 
-                <button id="btnAbrirProntuario" class="btn-abrir-prontuario">Ver prontuario</button>
-                <dialog id="btn-abrir-pronturario-paciente" class="modalProntuario">
-                    <h2>Aqui está seu prontuario/Prontuario paciente. </h2>
-                    <p>Aqui estão o prontuario do seu paciente</p>
-                    <textarea  class="area-prontuario" placeholder="Aqui está o prontuario do seu paciente"></textarea>
-                    <button id="btn-fechar-prontuario" class="btn-outline-full">Fechar</button>
-                </dialog>
-            </article>
+            <!-- CONTAINER DA GRID -->
+            <div class="consultas-grid">
+                
+                <!-- CARD DE PACIENTE -->
+                <article class="card-consulta">
+                    <span class="badge">Paciente</span>
+                    <h2 id="nomePacienteAgendado">Nome do paciente: </h2>
+                    
+                    <button id="btnAbrirProntuario" class="btn-abrir-prontuario">Ver prontuario</button>
+                    
+                    <dialog id="btn-abrir-pronturario-paciente" class="modalProntuario">
+                        <h2>Aqui está seu prontuario/Prontuario paciente. </h2>
+                        <p>Aqui estão o prontuario do seu paciente</p>
+                        <textarea class="area-prontuario" placeholder="Aqui está o prontuario do seu paciente"></textarea>
+                        <button id="btn-fechar-prontuario" class="btn-outline-full">Fechar</button>
+                    </dialog>
+                </article>
+
+            </div> <!-- FIM DA GRID -->
+
         </main>
-    </div>
+
+
 
     <!-- Modal Modernizado -->
     <dialog id="modalAgenda" class="modal-moderno">

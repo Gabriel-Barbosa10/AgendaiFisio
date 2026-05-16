@@ -223,8 +223,7 @@ img{
     font-weight: 800;
     font-size: 1.5rem;
     cursor: pointer;
-    transition: var(--transition);
-    
+    transition: var(--transition);  
     text-decoration: #A7C27E;
     display: flex; 
     justify-content: center; 
@@ -233,7 +232,8 @@ img{
 
 .btn-agendar-main:hover, .btn-confirmar-full:hover { 
     transform: scale(1.02); 
-    filter: brightness(1.1); }
+    filter: brightness(1.1); 
+}
 
 .btn-outline-full {
     width: 100%;
