@@ -23,6 +23,7 @@ const el = {
     btnConfirmar: document.getElementById("confirmarAgendamento"),
     btnAbrirProntuario: document.getElementById("btnAbrirProntuario"),
     btnAberturaProntuarioPaciente: document.getElementById("btn-abrir-pronturario-paciente"),
+    btnFecharProntuario: document.getElementById("btn-fechar-prontuario"),
 
     modalAgenda: document.getElementById("modalAgenda"),
     modalSucesso: document.getElementById("modalSucesso"),
@@ -181,20 +182,32 @@ function finalizarAgendamento() {
 // ============================================================
 // 8. PRONTUÁRIO
 // ============================================================
+
+
+// 2. Escutador de evento no botão de abertura
+el.btnAbrirProntuario.addEventListener('click', () => {
+    // Pega o texto do paciente do seu HTML dinamicamente
+    const nomePaciente = document.getElementById('nomePacienteAgendado').innerText;
+    
+    // Passa o nome limpo para a função
+    abrirProntuario(nomePaciente.replace("Nome do paceinte: ", ""));
+});
+el.btnFecharProntuario.addEventListener('click', () => {
+    el.btnAberturaProntuarioPaciente.close();
+});
+
+// 3. Função responsável por abrir o modal do prontuário
 function abrirProntuario(nome) {
-    el.btnAbrirProntuario.onclick(() =>+{
-
-    })
-
-    el.nomePacienteProntuario.innerText = nome;
-    el.textoProntuario.value = "";
-
+    console.log(`Abrindo o prontuario do paciente: ${nome}`);
+    el.btnAberturaProntuarioPaciente.showModal();
 }
 
+// 4. Função para salvar o prontuário (ajustada para fechar o modal correto)
 function salvarProntuario() {
     const btn = el.btnSalvarProntuario;
-    const original = btn.innerText;
+    if (!btn) return; // Proteção caso o botão salvar ainda não exista no HTML
 
+    const original = btn.innerText;
     btn.innerText = "⌛ Salvando...";
     btn.disabled = true;
 
@@ -202,9 +215,10 @@ function salvarProntuario() {
         alert(`✅ Evolução salva!`);
         btn.innerText = original;
         btn.disabled = false;
-        el.modalProntuario.close();
+        el.modalProntuario.close(); // Fecha o modal correto
     }, 800);
 }
+
 
 // ============================================================
 // 9. EVENTOS
