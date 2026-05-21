@@ -2,13 +2,14 @@
    DESIGN SYSTEM & VARIÁVEIS
 ============================================================ */
 :root {
-    --p-profissional: oklch(60% 0.12 250); /* Azul Profissional */
+    --p-profissional: oklch(60% 0.12 250);
+    /* Azul Profissional */
     --texto-titulo: #0f172a;
     --texto-corpo: #64748b;
     --bg-gradient: radial-gradient(at top left, #f8fafc, #e2e8f0);
     --branco: #ffffff;
     --borda-suave: #e2e8f0;
-    --sombra-soft: 0 25px 50px -12px rgba(0,0,0,0.08);
+    --sombra-soft: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -46,9 +47,9 @@ body {
 .auth-card::before {
     content: '';
     position: absolute;
-    top: 0; 
-    left: 0; 
-    width: 8px; 
+    top: 0;
+    left: 0;
+    width: 8px;
     height: 100%;
     background: #A7C27E;
 }
@@ -73,9 +74,11 @@ body {
     color: var(--texto-corpo);
     font-size: 0.95rem;
 }
-span.a{
+
+span.a {
     color: #C8DAA0;
 }
+
 /* ============================================================
    FORMULÁRIOS & INPUTS
 ============================================================ */
@@ -122,7 +125,9 @@ span.a{
     align-items: flex-start;
 }
 
-.lgpd-container input { display: none; }
+.lgpd-container input {
+    display: none;
+}
 
 .checkmark {
     width: 20px;
@@ -135,12 +140,12 @@ span.a{
     background: #f8fafc;
 }
 
-.lgpd-container input:checked + .checkmark {
+.lgpd-container input:checked+.checkmark {
     background: var(--p-profissional);
     border-color: var(--p-profissional);
 }
 
-.lgpd-container input:checked + .checkmark::after {
+.lgpd-container input:checked+.checkmark::after {
     content: "✓";
     position: absolute;
     color: white;
@@ -197,7 +202,9 @@ span.a{
     font-weight: 700;
 }
 
-.auth-footer a:hover { text-decoration: underline; }
+.auth-footer a:hover {
+    text-decoration: underline;
+}
 
 /* ============================================================
    MODAIS (DIALOG)
@@ -216,22 +223,75 @@ dialog::backdrop {
     backdrop-filter: blur(4px);
 }
 
-dialog h2 { margin-top: 0; color: var(--texto-titulo); }
-dialog p { color: var(--texto-corpo); margin-bottom: 1.5rem; }
+dialog h2 {
+    margin-top: 0;
+    color: var(--texto-titulo);
+}
 
-.modal-erro { border-top: 8px solid #ef4444; }
-.modal-moderno { border-top: 8px solid #22c55e; }
+dialog p {
+    color: var(--texto-corpo);
+    margin-bottom: 1.5rem;
+}
+
+.modal-erro {
+    border-top: 8px solid #ef4444;
+}
+
+.modal-moderno {
+    border-top: 8px solid #22c55e;
+}
+
+.modal-lgpd {
+    background-color: #ffffff;
+    color: #171717;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.modal-lgpd h2,
+.modal-lgpd h3,
+.modal-lgpd p,
+.modal-lgpd ul,
+.modal-lgpd li {
+    color: #171717;
+}
+
+.modal-lgpd-content {
+    text-align: left;
+}
+
+.btn-fechar-lgpd {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--primaria, #0ea5e9);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
 
 /* ============================================================
    ANIMAÇÕES
 ============================================================ */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 input:not(:focus):not(:placeholder-shown):invalid {
-  border-color: orange;
+    border-color: orange;
 }
+
 /* Borda e fundo do input com erro */
 .input-erro {
     border: 2px solid #dc3545 !important;
