@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
         countMes: document.getElementById("countMes")
     };
 
-    const gradeBase = ["10:00", "11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00"];
+    const gradeBase = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
 
     // Define data inicial como hoje
     const hojeISO = new Date().toISOString().split('T')[0];
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const hojeStr = new Date().toLocaleDateString('pt-br');
         let totalHoje = 0, totalSemana = 0, totalMes = 0;
-        
+
         el.listaGeral.innerHTML = "";
 
         if (consultasFisio.length === 0) {
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const [dia, mes, ano] = info.data.split('/');
             const dataConsultaObj = new Date(ano, mes - 1, dia);
             const hojeObj = new Date();
-            hojeObj.setHours(0,0,0,0);
+            hojeObj.setHours(0, 0, 0, 0);
 
             const diffDias = Math.floor((dataConsultaObj - hojeObj) / (1000 * 60 * 60 * 24));
 
@@ -83,11 +83,11 @@ document.addEventListener("DOMContentLoaded", () => {
     window.carregarTela = () => {
         const agendaGlobal = JSON.parse(localStorage.getItem('agendaFisioData')) || {};
         const consultasFisio = JSON.parse(localStorage.getItem("consultas_fisio")) || [];
-        const dataSelISO = el.dataInput.value; 
+        const dataSelISO = el.dataInput.value;
         const dataSelBR = dataSelISO.split('-').reverse().join('/');
 
         el.grid.innerHTML = "";
-        
+
         gradeBase.forEach(hora => {
             const consultaExistente = consultasFisio.find(c => c.data === dataSelBR && c.hora === hora);
             const statusAgenda = agendaGlobal[dataSelISO] ? agendaGlobal[dataSelISO][hora] : null;
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (consultaExistente) {
                 status = "ocupado";
                 textoBotao = `👤 ${hora}`;
-                classe = "ocupado"; 
+                classe = "ocupado";
             } else if (statusAgenda === "bloqueado") {
                 status = "bloqueado";
                 textoBotao = `🔒 ${hora}`;
@@ -120,9 +120,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const agendaAtu = JSON.parse(localStorage.getItem('agendaFisioData')) || {};
                 if (!agendaAtu[dataSelISO]) agendaAtu[dataSelISO] = {};
-                
+
                 agendaAtu[dataSelISO][hora] = (status === "bloqueado") ? null : "bloqueado";
-                
+
                 localStorage.setItem('agendaFisioData', JSON.stringify(agendaAtu));
                 carregarTela();
             };

@@ -2,7 +2,7 @@
    1. DESIGN SYSTEM & TOKENS
 ============================================================ */
 :root {
-    --brand: #A7C27E;        
+    --brand: #A7C27E;
     --brand-soft: #A7C27E;
     --success: #22c55e;
     --error: #ff4d4d;
@@ -12,10 +12,12 @@
     --texto-muted: #64748b;
     --radius: 24px;
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    --shadow-soft: 0 10px 30px -10px rgba(0,0,0,0.05);
+    --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
 }
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 /* ============================================================
    2. LAYOUT BASE & NAVBAR
@@ -29,67 +31,81 @@ body {
 }
 
 .navbar {
-    padding: 3rem;
+    padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.8);
+    background: white;
     backdrop-filter: blur(10px);
     border-bottom: 1px solid #e2e8f0;
     position: sticky;
-    top: 0; 
+    top: 0;
     z-index: 100;
 }
-.navbar:hover{
+
+.navbar:hover {
     font: white;
 }
 
-.logo { 
-    font-weight: 900; 
-    color: var(--brand); 
-    font-size: 2rem; 
-    text-decoration: none; 
+.logo {
+    font-weight: 900;
+    color: var(--brand);
+    font-size: 2rem;
+    text-decoration: none;
     display: flex;
     align-items: center;
     gap: 10px;
     mix-blend-mode: multiply;
 }
-h1{
-    height: 70px;
+
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
     padding: 0;
     margin: 0;
-    justify-content: space-between;
     mix-blend-mode: multiply;
-
+    font-size: 2rem;
 }
-img{
+
+img {
     height: 60px;
     width: auto;
     mix-blend-mode: multiply;
 }
 
 /* MENU PERFIL (DROPDOWN ORGANIZADO) */
-.perfil-container { position: relative; cursor: pointer; }
+.perfil-container {
+    position: relative;
+    cursor: pointer;
+}
 
 .avatar {
-    width: 45px; height: 45px;
+    width: 45px;
+    height: 45px;
     background: var(--brand);
     color: white;
     border-radius: 50%;
-    display: grid; place-items: center;
+    display: grid;
+    place-items: center;
     font-weight: 800;
     box-shadow: 0 4px 12px var(--brand-soft);
 }
 
 .dropdown-conta {
     position: absolute;
-    top: 120%; right: 0;
+    top: 120%;
+    right: 0;
     width: 260px;
     background: var(--branco);
     border-radius: 20px;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
-    padding: 1rem; /* Padding reduzido para os links encostarem nas bordas no hover */
-    opacity: 0; visibility: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    padding: 1rem;
+    /* Padding reduzido para os links encostarem nas bordas no hover */
+    opacity: 0;
+    visibility: hidden;
     transform: translateY(10px);
     transition: var(--transition);
     border: 1px solid #e2e8f0;
@@ -97,7 +113,8 @@ img{
 }
 
 .perfil-container:hover .dropdown-conta {
-    opacity: 1; visibility: visible;
+    opacity: 1;
+    visibility: visible;
     transform: translateY(0);
     color: var(--branco);
 }
@@ -109,8 +126,15 @@ img{
     flex-direction: column;
 }
 
-.user-header strong { font-size: 1rem; color: var(--texto); }
-.user-header span { font-size: 0.85rem; color: var(--texto-muted); }
+.user-header strong {
+    font-size: 1rem;
+    color: var(--texto);
+}
+
+.user-header span {
+    font-size: 0.85rem;
+    color: var(--texto-muted);
+}
 
 .dropdown-conta hr {
     border: 0;
@@ -125,7 +149,8 @@ img{
     gap: 12px;
     padding: 12px 10px;
     color: var(--texto);
-    text-decoration: none !important; /* Remove o sublinhado roxo */
+    text-decoration: none !important;
+    /* Remove o sublinhado roxo */
     font-size: 0.95rem;
     font-weight: 600;
     border-radius: 12px;
@@ -138,24 +163,32 @@ img{
 }
 
 /* Cor especial para o botão Sair */
-.dropdown-conta a.logout { color: var(--error); }
-.dropdown-conta a.logout:hover { background: #fff5f5; }
+.dropdown-conta a.logout {
+    color: var(--error);
+}
+
+.dropdown-conta a.logout:hover {
+    background: #fff5f5;
+}
 
 /* ============================================================
    3. CARDS DE AGENDAMENTO
 ============================================================ */
-.container-agendamento { 
-    padding: 4rem; 
-    max-width: 1200px; 
-    margin: 0 auto; 
+.container-agendamento {
+    padding: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
 
 }
-.titulo-sessao { font-size: 2.5rem; 
-    font-weight: 900; 
-    text-align: center; 
-    margin-bottom: 3rem; 
-    letter-spacing: -1.5px; 
-    color: var(--brand); }
+
+.titulo-sessao {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 3rem;
+    letter-spacing: -1.5px;
+    color: var(--brand);
+}
 
 .cards-grid {
     display: grid;
@@ -172,9 +205,9 @@ img{
     transition: var(--transition);
 }
 
-.card-moderno:hover { 
-    transform: translateY(-8px); 
-    box-shadow: 0 1px 15px var(--texto) ;
+.card-moderno:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 1px 15px var(--texto);
     border-color: var(--brand);
 }
 
@@ -197,7 +230,8 @@ img{
 /* ============================================================
    4. FORMULÁRIOS (INPUTS E BOTÕES)
 ============================================================ */
-.select-premium, .input-premium {
+.select-premium,
+.input-premium {
     width: 100%;
     margin: 10px;
     padding: 16px;
@@ -210,9 +244,14 @@ img{
     transition: var(--transition);
 }
 
-.select-premium:focus, .input-premium:focus { border-color: var(--brand); background: #fff; }
+.select-premium:focus,
+.input-premium:focus {
+    border-color: var(--brand);
+    background: #fff;
+}
 
-.btn-agendar-main, .btn-confirmar-full {
+.btn-agendar-main,
+.btn-confirmar-full {
     width: 100%;
     padding: 1rem;
     margin-top: 10px;
@@ -223,16 +262,17 @@ img{
     font-weight: 800;
     font-size: 1.5rem;
     cursor: pointer;
-    transition: var(--transition);  
+    transition: var(--transition);
     text-decoration: #A7C27E;
-    display: flex; 
-    justify-content: center; 
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
-.btn-agendar-main:hover, .btn-confirmar-full:hover { 
-    transform: scale(1.02); 
-    filter: brightness(1.1); 
+.btn-agendar-main:hover,
+.btn-confirmar-full:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
 }
 
 .btn-outline-full {
@@ -247,7 +287,9 @@ img{
     cursor: pointer;
     transition: 0.3s;
     text-decoration: none;
-    display: flex; justify-content: center; align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ============================================================
@@ -259,7 +301,9 @@ dialog::backdrop {
     z-index: 999;
 }
 
-.modal-moderno { /* Ocupa no máximo 95% da altura da tela *//* Esconde qualquer barra de rolagem do modal */
+.modal-moderno {
+    /* Ocupa no máximo 95% da altura da tela */
+    /* Esconde qualquer barra de rolagem do modal */
     flex-direction: column;
     gap: 8px;
     max-width: 180px;
@@ -269,14 +313,14 @@ dialog::backdrop {
     border: none;
     padding: 1.5rem;
     position: fixed;
-    top: 50%; 
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
     max-width: 480px;
     background: var(--branco);
     border-radius: 32px;
-    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.3);
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.3);
     z-index: 1000;
 }
 
@@ -284,19 +328,55 @@ dialog[open].modal-moderno {
     animation: modalShow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-.modal-header h2 { font-size: 1.5rem; font-weight: 900; margin: 0; }
-.btn-fechar-x { all: unset; font-size: 1.8rem; cursor: pointer; color: var(--texto-muted); line-height: 1; }
-
-.horarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-.btn-hora {
-    padding: 12px; border-radius: 12px; border: 1px solid #f1f5f9;
-    background: #f8fafc; cursor: pointer; font-weight: 700; transition: 0.2s;
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 }
-.btn-hora:hover { border-color: var(--brand); }
-.btn-hora.active { background: var(--brand); color: white; border-color: var(--brand); }
 
-.area-digitacao{
+.modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+.btn-fechar-x {
+    all: unset;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--texto-muted);
+    line-height: 1;
+}
+
+.horarios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-hora {
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    background: #f8fafc;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.btn-hora:hover {
+    border-color: var(--brand);
+}
+
+.btn-hora.active {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+}
+
+.area-digitacao {
     width: 450px;
     height: 10rem;
     font-size: 20px;
@@ -309,10 +389,11 @@ dialog[open].modal-moderno {
 ============================================================ */
 .toast-erro {
     position: fixed;
-    top: 30px; left: 50%;
+    top: 30px;
+    left: 50%;
     opacity: 0;
     visibility: hidden;
-    transform: translateX(-50%) translateY(-100px); 
+    transform: translateX(-50%) translateY(-100px);
     background: var(--error);
     color: white;
     padding: 16px 32px;
@@ -323,10 +404,10 @@ dialog[open].modal-moderno {
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-.toast-erro.show { 
+.toast-erro.show {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0); 
+    transform: translateX(-50%) translateY(0);
 }
 
 .mensagem-error-modal {
@@ -344,18 +425,42 @@ dialog[open].modal-moderno {
 }
 
 @keyframes modalShow {
-    from { opacity: 0; transform: translate(-50%, -48%) scale(0.96); }
-    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
 }
 
-.shake { animation: shakeAnim 0.4s ease-in-out; }
+.shake {
+    animation: shakeAnim 0.4s ease-in-out;
+}
+
 @keyframes shakeAnim {
-    0%, 100% { transform: translate(-50%, -50%) translateX(0); }
-    25% { transform: translate(-50%, -50%) translateX(-8px); }
-    75% { transform: translate(-50%, -50%) translateX(8px); }
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) translateX(0);
+    }
+
+    25% {
+        transform: translate(-50%, -50%) translateX(-8px);
+    }
+
+    75% {
+        transform: translate(-50%, -50%) translateX(8px);
+    }
 }
 
-footer button, .body-footer-button { display: none !important; }
+footer button,
+.body-footer-button {
+    display: none !important;
+}
+
 /* Estilo para o botão de hora quando estiver bloqueado pelo terapeuta */
 .btn-hora.ocupado {
     background: #f1f5f9 !important;
@@ -366,12 +471,26 @@ footer button, .body-footer-button { display: none !important; }
 }
 
 /* Opcional: Feedback visual de erro no modal */
-.shake { animation: shake 0.4s; }
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+.shake {
+    animation: shake 0.4s;
 }
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
 /* Disponível - Verde Moderno */
 .btn-hora.disponivel {
     background: #f0fdf4 !important;
@@ -402,6 +521,7 @@ footer button, .body-footer-button { display: none !important; }
     border-color: var(--brand) !important;
     transform: scale(1.05);
 }
+
 #sintomasPaciente {
     transition: border-color 0.3s ease;
 }

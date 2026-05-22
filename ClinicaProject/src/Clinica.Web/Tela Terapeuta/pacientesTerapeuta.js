@@ -7,7 +7,7 @@ const state = {
         const dadosBrutos = JSON.parse(localStorage.getItem("consultas_fisio")) || [];
         // Filtra apenas consultas válidas para evitar erros visuais
         const validas = dadosBrutos.filter(c => c && c.nome && c.data && c.id);
-        
+
         // Se encontrou lixo, limpa o LocalStorage silenciosamente
         if (dadosBrutos.length !== validas.length) {
             localStorage.setItem("consultas_fisio", JSON.stringify(validas));
@@ -29,7 +29,7 @@ const el = {
     statsCards: document.querySelectorAll(".stat-value"), // Os círculos/cards de números
     modalProntuario: document.getElementById("modalProntuario"),
     nomePacienteProntuario: document.getElementById("nomePacienteProntuario"),
-    textoProntuario: document.getElementById("textoProntuario"), 
+    textoProntuario: document.getElementById("textoProntuario"),
     btnSalvarProntuario: document.getElementById("btnSalvarProntuario")
 };
 
@@ -38,12 +38,12 @@ const el = {
 // ============================================================
 function renderizarDashboard() {
     if (!el.grid) return;
-    el.grid.innerHTML = ""; 
-    
+    el.grid.innerHTML = "";
+
     const listaGeral = state.consultas;
     const hojeStr = state.hoje;
     const mesAtualStr = state.mesAtual;
-    
+
     const agora = new Date();
     const horaAtualMinutos = (agora.getHours() * 60) + agora.getMinutes();
 
@@ -54,7 +54,7 @@ function renderizarDashboard() {
     const listaOrdenada = listaGeral.sort((a, b) => a.hora.localeCompare(b.hora));
 
     listaOrdenada.forEach(c => {
-        const dataConsulta = c.data; 
+        const dataConsulta = c.data;
         const mesConsulta = dataConsulta.split('/')[1];
 
         // Lógica de Contagem para os Widgets Superiores
@@ -69,7 +69,7 @@ function renderizarDashboard() {
 
             let statusClass = "status-azul";
             let statusTexto = "Agendado";
-            
+
             // Lógica de Status em tempo real
             if (horaAtualMinutos >= consultaMinutos && horaAtualMinutos <= (consultaMinutos + tempoEstimadoSessao)) {
                 statusClass = "status-amarelo";
@@ -143,23 +143,23 @@ window.cancelarConsulta = (id) => {
 window.abrirProntuario = (id) => {
     const consultas = state.consultas;
     const consulta = consultas.find(c => String(c.id) === String(id));
-    
+
     if (consulta) {
         el.nomePacienteProntuario.innerText = consulta.nome;
         // Recupera evolução anterior se existir, senão mostra a queixa
         el.textoProntuario.value = consulta.evolucao || `--- QUEIXA DO PACIENTE ---\n${consulta.sintomas || "Nenhum relato."}\n\n--- EVOLUÇÃO MÉDICA ---\n`;
-        
+
         el.modalProntuario.showModal();
 
         // Configura o botão de salvar para este paciente específico
         el.btnSalvarProntuario.onclick = () => {
             const todas = JSON.parse(localStorage.getItem("consultas_fisio")) || [];
             const index = todas.findIndex(p => String(p.id) === String(id));
-            
+
             if (index !== -1) {
                 todas[index].evolucao = el.textoProntuario.value;
                 localStorage.setItem("consultas_fisio", JSON.stringify(todas));
-                
+
                 el.btnSalvarProntuario.innerText = "⌛ Salvando...";
                 setTimeout(() => {
                     alert(`✅ Evolução de ${consulta.nome} salva com sucesso!`);

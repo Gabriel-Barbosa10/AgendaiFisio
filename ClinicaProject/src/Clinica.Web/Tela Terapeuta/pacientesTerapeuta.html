@@ -1,65 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel do Terapeuta - AgendaiFisio</title>
     <link href="https://googleapis.com" rel="stylesheet">
-    <link rel="stylesheet" href="/ClinicaProject/src/Clinica.Web/tela Dashboard terapeuta/dashboards.css">
+    <link rel="stylesheet" href="dashboards.css">
 </head>
+
 <body>
 
     <div class="app-container">
-        <!-- Sidebar lateral fixa -->
+        <!-- Sidebar Padrão -->
         <aside class="sidebar">
-            <div class="logo"> AgendaiFisio</div>
+            <div class="sidebar-logo">🌿 AgendaiFisio</div>
             <nav>
-                <a href="#" class="active">📊 Visão Geral</a>
+                <a href="dashboards.html">📊 Dashboard</a>
                 <a href="TelaTerapeuta.html">📅 Minha Agenda</a>
-                <a href="#">👥 Meus Pacientes</a>
+                <a href="pacientesTerapeuta.html" class="active">👥 Meus Pacientes</a>
             </nav>
-            <div class="user-info">
-                <strong>Dr. Davi Vinciaqui</strong>
-                <p>Psicólogo Clínico</p>
+            <div class="sidebar-user">
+                <strong>Davi Gusmão</strong>
+                <p>Terapeuta</p>
             </div>
         </aside>
 
         <!-- Área Principal -->
         <main class="main-content">
-            <header class="main-header">
-                <div class="title-group">
-                    <h1>Agenda Semanal</h1>
-                    <p id="currentDate">Carregando calendário...</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn-action-outline" id="btnVerPacientes">👥 Pacientes</button>
-                    <button class="btn-novo" id="btnBloquearAgenda">🔒 Bloquear Agenda</button>
-                </div>
-            </header>
-
-            <!-- Estatísticas -->
-            <section class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-label">Consultas Hoje</span>
-                    <span class="stat-value"></span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Consultas Mês </span>
-                    <span class="stat-value"></span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Atendidos Até Agora </span>
-                    <span class="stat-value"></span>
-                </div>
-            </section>
-
-            <!-- Lista de Consultas -->
-            <section class="consultas-section">
-                <h2>Próximos Atendimentos</h2>
-                <div class="consultas-grid" id="gridConsultas">
-                    <!-- Cards injetados via JS -->
-                </div>
-            </section>
+            
         </main>
     </div>
 
@@ -87,13 +56,13 @@
 
             <div class="campo-evolucao">
                 <label for="textoProntuario">Evolução Clínica / Notas da Sessão</label>
-                <textarea id="textoProntuario" 
-                          class="input-prontuario" 
-                          placeholder="Descreva aqui o comportamento, falas relevantes e intervenções..."></textarea>
+                <textarea id="textoProntuario" class="input-prontuario"
+                    placeholder="Descreva aqui o comportamento, falas relevantes e intervenções..."></textarea>
             </div>
 
             <div class="modal-footer-flex">
-                <button onclick="document.getElementById('modalProntuario').close()" class="btn-descartar">Descartar</button>
+                <button onclick="document.getElementById('modalProntuario').close()"
+                    class="btn-descartar">Descartar</button>
                 <button id="btnSalvarProntuario" class="btn-confirmar-prontuario">Salvar Evolução</button>
             </div>
         </div>
@@ -121,4 +90,5 @@
 
     <script src="pacientesTerapeuta.js"></script>
 </body>
+
 </html>

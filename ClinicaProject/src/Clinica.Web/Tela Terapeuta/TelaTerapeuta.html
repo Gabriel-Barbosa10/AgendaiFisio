@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Especialista - AgendaiFisio</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="dashboards.css">
+    <link rel="stylesheet" href="TelaTerapeuta.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar Padrão -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">🌿 AgendaiFisio</div>
+            <nav>
+                <a href="dashboards.html">📊 Dashboard</a>
+                <a href="TelaTerapeuta.html" class="active">📅 Minha Agenda</a>
+                <a href="pacientesTerapeuta.html">👥 Meus Pacientes</a>
+            </nav>
+            <div class="sidebar-user">
+                <strong>Davi Gusmão</strong>
+                <p>Terapeuta</p>
+            </div>
+        </aside>
+        <main class="container-mestre">
+            <!-- COLUNA 1: GESTÃO DE DISPONIBILIDADE -->
+            <section class="card-info">
+                <h2>Configurar Disponibilidade</h2>
+                <div class="seletor-data">
+                    <label
+                        style="display: block; margin-bottom: 8px; font-weight: 700; color: #64748b; font-size: 0.85rem;">Selecione
+                        o Dia para Gerenciar:</label>
+                    <input type="date" id="dataGestao" class="input-moderno"
+                        style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 1rem; font-family: inherit;">
+                </div>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">Clique no cadeado para
+                    <strong>Bloquear (🔒)</strong> ou <strong>Liberar (🔓)</strong>.</p>
+                <div id="gridGestao" class="horarios-grid">
+                    <!-- Gerado via JS -->
+                </div>
+            </section>
+
+            <!-- COLUNA 2: PRÓXIMOS PACIENTES (DASHBOARD LIST) -->
+            <section class="card-info">
+                <h2>Próximos Pacientes</h2>
+                <div id="listaGeralPacientes" class="lista-pacientes-geral">
+                    <!-- Injetado dinamicamente -->
+                </div>
+            </section>
+        </main>
+
+        <script src="TelaTerapeuta.js"></script>
+</body>
+
+</html>
