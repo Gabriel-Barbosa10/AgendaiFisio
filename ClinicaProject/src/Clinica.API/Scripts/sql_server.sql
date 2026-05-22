@@ -1,4 +1,7 @@
-CREATE DATABASE DBAgendaiFisio GO
+CREATE DATABASE AgendaiFisioDB
+
+GO
+
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY IDENTITY (1, 1),
     nome VARCHAR(100) NOT NULL,
@@ -56,6 +59,6 @@ CREATE TABLE arquivo_exame (
     id_arquivo INT PRIMARY KEY IDENTITY (1, 1),
     caminho_storage VARCHAR(500) NOT NULL,
     tamanho_bytes BIGINT NULL,
-    id_prontuario INT NULL,
+    id_prontuario INT NOT NULL,
     CONSTRAINT FK_Arquivo_Prontuario FOREIGN KEY (id_prontuario) REFERENCES prontuario (id_prontuario)
 );
