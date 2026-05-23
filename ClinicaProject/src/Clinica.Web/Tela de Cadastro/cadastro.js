@@ -32,6 +32,30 @@ window.onload = function() {
         });
     }
 
+    // --- 1.5 MÁSCARA CREFITO ---
+    const aplicarMascaraCrefito = (valor) => {
+        let v = valor.toUpperCase();
+        let numeros = v.replace(/\D/g, "").substring(0, 6);
+        let letras = v.replace(/[^A-Z]/g, "").substring(0, 2);
+        
+        if (numeros.length === 6) {
+            if (letras.length > 0) {
+                return numeros + "-" + letras;
+            } else if (valor.endsWith("-")) {
+                return numeros + "-";
+            }
+            return numeros;
+        }
+        return numeros;
+    };
+
+    if (el.crefitoReq) {
+        el.crefitoReq.addEventListener("input", (e) => {
+            e.target.value = aplicarMascaraCrefito(e.target.value);
+            el.crefitoReq.classList.remove("input-erro");
+        });
+    }
+
     // Remove o erro visual dos outros campos assim que o usuário digita algo
     [el.inputNomeCadastro, el.inputEmailCadastro, el.inputSenhaCadastro, el.crefitoReq].forEach(input => {
         if (input) {
@@ -137,11 +161,11 @@ window.onload = function() {
             marcarErro(el.inputCPFCadastro, "Por favor, insira um CPF válido.");
         }
 
-        // CORREÇÃO 2: Ajustado de "dados.crefitoReq !== 9" para "dados.crefitoReq.length"
+        // CORREÇÃO 2: Validação de 6 números, hífen e 2 letras (9 caracteres no total)
         if (!dados.crefitoReq) {
             marcarErro(el.crefitoReq, "O campo CREFITO é obrigatório.");
-        } else if (dados.crefitoReq.length < 4) { // Ajuste o número 4 para o tamanho mínimo aceito do CREFITO se necessário
-            marcarErro(el.crefitoReq, "Por Favor, insira o seu CREFITO válido.");
+        } else if (!/^\d{6}-[A-Z]{2}$/.test(dados.crefitoReq)) {
+            marcarErro(el.crefitoReq, "Por favor, insira um CREFITO válido (ex: 123456-TO).");
         }
         
         // Valida E-mail

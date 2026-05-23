@@ -77,7 +77,7 @@ function renderConsultas() {
                 Ver Prontuário
             </button>
         `;
-        
+
 
         el.grid.appendChild(card);
     });
@@ -175,7 +175,7 @@ function finalizarAgendamento() {
 el.btnAbrirProntuario.addEventListener('click', () => {
     // Pega o texto do paciente do seu HTML dinamicamente
     const nomePaciente = document.getElementById('nomePacienteAgendado').innerText;
-    
+
     // Passa o nome limpo para a função
     abrirProntuario(nomePaciente.replace("Nome do paceinte: ", ""));
 });
@@ -252,7 +252,7 @@ const definirClasseStatus = (status) => {
 // 2. Na sua função de renderizar cards, aplique assim:
 const renderizarCards = () => {
     grid.innerHTML = "";
-    
+
     consultas.forEach(c => {
         // Chamamos a função para pegar a classe dinâmica
         const classeStatus = definirClasseStatus(c.status);
@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Captura as referências dos elementos do seu card
     const h2NomePaciente = document.getElementById("nomePacienteAgendado");
     const labelTerapeuta = document.querySelector(".card-consulta .campo-selecao label");
-    
+
     // Lê todas as informações da memória do navegador
     const pacienteSalvo = localStorage.getItem("pacienteAgendado");
     const dataSalva = localStorage.getItem("dataAgendada");
@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pacienteSalvo && h2NomePaciente) {
         h2NomePaciente.textContent = pacienteSalvo;
     }
-    
+
     if (profissionalSalvo && labelTerapeuta) {
         // Exibe o nome do profissional e o horário/data no card
         labelTerapeuta.innerHTML = `<strong>Profissional:</strong> ${profissionalSalvo} <br> 

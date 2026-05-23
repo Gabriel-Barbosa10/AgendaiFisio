@@ -38,7 +38,9 @@
                     <input type="checkbox" id="checkLGPD">
                     <span class="checkmark"></span>
                     <span class="lgpd-text">
-                        Aceito os termos da <strong>LGPD</strong> e autorizo o tratamento dos dados.
+                        Aceito os termos da <a href="lgpd.html" target="_blank"
+                            style="cursor: pointer; text-decoration: underline; color: var(--primaria); font-weight: bold;">LGPD</a> e
+                        autorizo o tratamento dos dados.
                     </span>
                 </label>
 
@@ -47,13 +49,13 @@
             <dialog id="modalSucessoCadastro" class="modal-moderno">
                 <h2>Cadastro com Sucesso</h2>
                 <p>Seu cadastro foi realizado com sucesso! Seja bem vindo ao nosso sistema.</p>
-                <button id="btnRedirecionar" href="../tela de login/login.html">Voltar ao Login</button>
+                <button id="btnRedirecionar" class="btn-auth" href="../tela de login/login.html">Voltar ao Login</button>
             </dialog>
             <!-- NOVO: MODAL DE ERRO -->
             <dialog id="mnodalErro" class="modal-erro">
                 <h2 style="color: #d32f2f;">Ops! Algo deu errado</h2>
                 <p id="mensagemErro">Verifique os dados preenchidos.</p>
-                <button onclick="this.closest('dialog').close()" class="btn-fechar">Tentar Novamente</button>
+                <button onclick="this.closest('dialog').close()" class="btn-auth">Tentar Novamente</button>
             </dialog>
             
             <div class="auth-footer" style="margin-top: 20px; font-size: 13px;">

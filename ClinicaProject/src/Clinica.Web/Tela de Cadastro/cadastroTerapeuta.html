@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,12 @@
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="teladecadastro.css">
 </head>
+
 <body>
 
     <div class="auth-container">
         <!-- O Card Branco que centraliza tudo -->
-        <div class="auth-card"> 
+        <div class="auth-card">
             <header class="auth-header">
                 <h2>Cadastro Profissional</h2>
                 <p>Crie seu perfil para gerenciar seus atendimentos</p>
@@ -21,28 +23,33 @@
             <form id="meuFormularioCadastro" class="form-body">
                 <div class="input-group">
                     <label for="nome">Nome Completo</label>
-                    <input type="text" id="nomeCadastro" placeholder="Digite seu nome completo" class="input-estilizado" required>
+                    <input type="text" id="nomeCadastro" placeholder="Digite seu nome completo" class="input-estilizado"
+                        required>
                 </div>
 
                 <div class="input-group">
                     <label for="cpfCadastro">CPF</label>
-                    <input type="text" id="cpfCadastro" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="000.000.000-00" maxlength="14" class="input-estilizado">
+                    <input type="text" id="cpfCadastro" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" placeholder="000.000.000-00"
+                        maxlength="14" class="input-estilizado">
                 </div>
 
                 <div class="input-group">
                     <label for="especialidade">Registro Profissional (CREFITO)</label>
-                    <input type="text" id="crefitoReq" placeholder="EX: 123456-TO" maxlength="9" class="input-estilizado" required>
+                    <input type="text" id="crefitoReq" placeholder="EX: 123456-TO" maxlength="9"
+                        class="input-estilizado" required>
                 </div>
 
                 <div class="input-group">
                     <label for="email">E-mail Profissional</label>
-                    <input type="email" id="emailCadastro" placeholder="seu@email.com" class="input-estilizado" required>
-                    
+                    <input type="email" id="emailCadastro" placeholder="seu@email.com" class="input-estilizado"
+                        required>
+
                 </div>
 
                 <div class="input-group">
                     <label for="senha">Senha</label>
-                    <input type="password" id="senhaCadastro" placeholder="Cadastre sua senha" class="input-estilizado" required>
+                    <input type="password" id="senhaCadastro" placeholder="Cadastre sua senha" class="input-estilizado"
+                        required>
 
                 </div>
 
@@ -51,17 +58,22 @@
                     <input type="checkbox" id="checkLGPD">
                     <span class="checkmark"></span>
                     <span class="lgpd-text">
-                        Aceito os termos da <strong>LGPD</strong> e autorizo o tratamento dos dados.
+                        Aceito os termos da <a href="lgpd.html" target="_blank"
+                            style="cursor: pointer; text-decoration: underline; color: var(--primaria); font-weight: bold;">LGPD</a>
+                        e
+                        autorizo o tratamento dos dados.
                     </span>
                 </label>
 
                 <button type="button" id="btnCadastrar" class="btn-auth" disabled>Finalizar Cadastro</button>
             </form>
 
-           <dialog id="modalSucessoCadastro" class="modal-moderno">
+
+            <dialog id="modalSucessoCadastro" class="modal-moderno">
                 <h2>Cadastro com Sucesso</h2>
                 <p>Seu cadastro foi realizado com sucesso! Seja bem vindo ao nosso sistema.</p>
-                <button id="btnRedirecionar" href="../tela de login/login.html">Voltar ao Login</button>
+                <button id="btnRedirecionar" class="btn-auth" href="../tela de login/login.html">Voltar ao
+                    Login</button>
             </dialog>
             <!-- NOVO: MODAL DE ERRO -->
             <dialog id="mnodalErro" class="modal-erro">
@@ -69,7 +81,7 @@
                 <p id="mensagemErro">Verifique os dados preenchidos.</p>
                 <button onclick="this.closest('dialog').close()" class="btn-fechar">Tentar Novamente</button>
             </dialog>
-           
+
             <footer class="auth-footer">
                 <span>Já possui conta? <a href="../tela de login/login.html">Fazer Login</a></span>
             </footer>
@@ -78,4 +90,5 @@
 
     <script src="cadastro.js"></script>
 </body>
+
 </html>
