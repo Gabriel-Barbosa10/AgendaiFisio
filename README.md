@@ -58,7 +58,7 @@ Este projeto foi construído pelos seguintes alunos da UNIP de Ribeirão Preto:
 | **[GABRIEL BARBOSA COSTA]** | [Back-End] | [https://github.com/Gabriel-Barbosa10] |
 | **[DAVI GUSMÃO VINCIAQUI]** | [Front-End] | [https://github.com/DaviGusmaoDEV] |
 | **[JONAS GONÇALVES ALMEIDA]** | [UI/UX] | [Link do GitHub] |
-| **[NYCOLE CAMYLE RIBEIRO CHAGAS]** | [Documentacao] | [Link do GitHub] |
+| **[NYCOLE CAMYLE RIBEIRO CHAGAS]** | [Documentacao] | [https://github.com/nycolecamyle-rgb] |
 
 ---
 
