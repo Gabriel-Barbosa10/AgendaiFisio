@@ -51,10 +51,14 @@ Este projeto foi construído pelos seguintes alunos da UNIP de Ribeirão Preto:
 
 | Nome | Função / Contribuição | GitHub / Contato |
 | :--- | :--- | :--- |
-| **[Seu Nome Aqui]** | [Sua Função Ex: Back-End / Front-End] | [Link do GitHub] |
-| **[Nome do Integrante]** | [Função do Integrante] | [Link do GitHub] |
-| **[Nome do Integrante]** | [Função do Integrante] | [Link do GitHub] |
-| **[Nome do Integrante]** | [Função do Integrante] | [Link do GitHub] |
+| **[JOÃO PEDRO SCHIAVONI SARILHO]** | [Engenharia-de-Software] | [https://github.com/JoaoPSchiavoni] |
+| **[LUIS EDUARDO SAMPAIO DE JESUS]** | [Engenharia-de-Software] | [https://github.com/Dudu-samp] |
+| **[JOÃO VITOR SOARES PIANCATELLI]** | [Banco-de-Dados] | [https://github.com/joaovjohn7] |
+| **[CAIO SILVA TEIXEIRA]** | [Back-End] | [https://github.com/Caio1914] |
+| **[GABRIEL BARBOSA COSTA]** | [Back-End] | [https://github.com/Gabriel-Barbosa10] |
+| **[DAVI GUSMÃO VINCIAQUI]** | [Front-End] | [https://github.com/DaviGusmaoDEV] |
+| **[JONAS GONÇALVES ALMEIDA]** | [UI/UX] | [Link do GitHub] |
+| **[NYCOLE CAMYLE RIBEIRO CHAGAS]** | [Documentacao] | [Link do GitHub] |
 
 ---
 
