@@ -14,10 +14,10 @@ namespace AgendaiFisioConsole
             Console.WriteLine("=======================================");
 
             // Testar a conexão com o banco ao iniciar
-            DatabaseConnection.TestConnection();
+            // DatabaseConnection.TestConnection();
             
             // Inserir dados de teste caso o banco esteja vazio
-            DatabaseConnection.SeedDatabase();
+            // DatabaseConnection.SeedDatabase();
 
             AuthService authService = new AuthService();
 

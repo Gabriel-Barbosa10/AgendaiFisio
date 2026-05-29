@@ -13,4 +13,5 @@ namespace AgendaiFisioConsole.Models
         public string TipoPerfil { get; set; } // PACIENTE ou TERAPEUTA
         public bool AceiteLgpd { get; set; }
     }
+    
 }

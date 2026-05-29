@@ -5,8 +5,8 @@ namespace AgendaiFisioConsole.Data
 {
     public static class DatabaseConnection
     {
-        // Utilizando uma string de conexão padrão local conforme conversado no plano.
-        private const string ConnectionString = "Server=localhost;Database=AgendaiFisioDB;Trusted_Connection=True;TrustServerCertificate=True;";
+        //string de conexão local
+        private const string ConnectionString = "Server=localhost,1434;Database=AgendaiFisioDB;User Id=sa;Password=alunosUnip*;TrustServerCertificate=True;Encrypt=False;";
 
         public static SqlConnection GetConnection()
         {

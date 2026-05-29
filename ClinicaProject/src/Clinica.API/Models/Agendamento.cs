@@ -1,6 +1,6 @@
 using System;
 
-namespace AgendaiFisioConsole.Models
+namespace AgendaiFisioAPI.Models
 {
     public class Agendamento
     {

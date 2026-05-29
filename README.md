@@ -51,13 +51,13 @@ Este projeto foi construído pelos seguintes alunos da UNIP de Ribeirão Preto:
 
 | Nome | Função / Contribuição | GitHub / Contato |
 | :--- | :--- | :--- |
-| **[JOÃO PEDRO SCHIAVONI SARILHO]** | [Engenharia-de-Software] | [https://github.com/JoaoPSchiavoni] |
+| **[JOÃO PEDRO SCHIAVONI SARILHO]** | [Engenharia-de-Software / Arquiteto-de-Software] | [https://github.com/JoaoPSchiavoni] |
 | **[LUIS EDUARDO SAMPAIO DE JESUS]** | [Engenharia-de-Software] | [https://github.com/Dudu-samp] |
 | **[JOÃO VITOR SOARES PIANCATELLI]** | [Banco-de-Dados] | [https://github.com/joaovjohn7] |
 | **[CAIO SILVA TEIXEIRA]** | [Back-End] | [https://github.com/Caio1914] |
 | **[GABRIEL BARBOSA COSTA]** | [Back-End] | [https://github.com/Gabriel-Barbosa10] |
 | **[DAVI GUSMÃO VINCIAQUI]** | [Front-End] | [https://github.com/DaviGusmaoDEV] |
-| **[JONAS GONÇALVES ALMEIDA]** | [UI/UX] | [Link do GitHub] |
+| **[JONAS GONÇALVES ALMEIDA]** | [UI/UX] | [https://github.com/goncalvesjonas337] |
 | **[NYCOLE CAMYLE RIBEIRO CHAGAS]** | [Documentacao] | [https://github.com/nycolecamyle-rgb] |
 
 ---

@@ -93,19 +93,76 @@ namespace AgendaiFisioConsole.Services
             
             string tipoPerfil = opcao == "2" ? "TERAPEUTA" : "PACIENTE";
 
-            Console.Write("Nome: ");
-            string nome = Console.ReadLine();
+            string nome;
 
-            Console.Write("Email: ");
-            string email = Console.ReadLine();
+            while (true)
+            {
+                Console.Write("Nome: ");
+                nome = Console.ReadLine()?.Trim();
+
+                if (!string.IsNullOrWhiteSpace(nome))
+                {
+                    break; 
+                }
+
+                Console.WriteLine("[ERRO] O nome não pode ser vazio. Por favor, digite um nome válido.");
+            }
+
+            string email;
+            while (true)
+            {
+                Console.Write("Email: ");
+                email = Console.ReadLine()?.Trim();
+
+                if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                {
+                    Console.WriteLine("[ERRO] Formato de email inválido. Digite novamente.");
+                    continue;
+                }
+                
+                using (var conn = DatabaseConnection.GetConnection())
+                {
+                    if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+
+                    string query = "SELECT COUNT(1) FROM usuario WHERE email = @email";
+                    using (var cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@email", email);
+                        int totalUsuarios = (int)cmd.ExecuteScalar();
+                        
+                        if (totalUsuarios > 0)
+                        {
+                            Console.WriteLine("[ERRO] Email já cadastrado.");
+                            continue;
+                        }
+                    }
+                }
+                break;
+            }
 
             string cpf;
             while (true)
             {
-                Console.Write("CPF (somente números): ");
-                cpf = Console.ReadLine();
-                if (ValidarCpf(cpf)) break;
-                Console.WriteLine("[ERRO] CPF inválido.");
+                cpf = ConsoleInput.LerCpfComMascara();
+                if (!ValidarCpf(cpf))
+                {
+                    Console.WriteLine("[ERRO] CPF inválido.");
+                    continue;
+                }
+
+                //Abre a conexão e verifica se já existe no banco
+                using var conn = DatabaseConnection.GetConnection();
+                string query = "SELECT COUNT(1) FROM usuario WHERE cpf = @cpf";
+                using var cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@cpf", cpf);
+
+                int totalUsuarios = (int)cmd.ExecuteScalar();
+                if (totalUsuarios > 0)
+                {
+                    Console.WriteLine("[ERRO] CPF já cadastrado.");
+                    continue;
+                }
+                break;
             }
 
             string senha;
@@ -164,17 +221,44 @@ namespace AgendaiFisioConsole.Services
             }
         }
 
-        private bool ValidarCpf(string cpf)
+    private bool ValidarCpf(string cpf)
+    {
+        if (string.IsNullOrWhiteSpace(cpf)) return false;
+
+        // Remove qualquer caractere que não seja número
+        cpf = Regex.Replace(cpf, "[^0-9]", "");
+
+        // CPF deve ter 11 dígitos e não pode ter todos os números iguais
+        if (cpf.Length != 11 || new string(cpf[0], 11) == cpf) return false;
+
+        // Validação do Primeiro Dígito Verificador
+        int[] multiplicadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        int soma = 0;
+
+        for (int i = 0; i < 9; i++)
         {
-            if (string.IsNullOrWhiteSpace(cpf)) return false;
-            cpf = Regex.Replace(cpf, "[^0-9]", "");
-            if (cpf.Length != 11) return false;
-            // Validação simplificada (evitando CPFs com todos dígitos iguais)
-            if (new string(cpf[0], 11) == cpf) return false;
-            // Algoritmo do dígito verificador omitido por simplicidade do console,
-            // mas assumimos válido se tem 11 dígitos numéricos reais e não todos iguais.
-            return true;
+            soma += (cpf[i] - '0') * multiplicadores1[i];
         }
+
+        int resto = soma % 11;
+        int digito1 = resto < 2 ? 0 : 11 - resto;
+
+        if (cpf[9] - '0' != digito1) return false;
+
+        // Validação do Segundo Dígito Verificador
+        int[] multiplicadores2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+        soma = 0;
+
+        for (int i = 0; i < 10; i++)
+        {
+            soma += (cpf[i] - '0') * multiplicadores2[i];
+        }
+
+        resto = soma % 11;
+        int digito2 = resto < 2 ? 0 : 11 - resto;
+
+        return cpf[10] - '0' == digito2;
+    }
 
         private string LerSenha()
         {

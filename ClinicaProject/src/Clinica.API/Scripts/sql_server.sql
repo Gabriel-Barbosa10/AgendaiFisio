@@ -2,17 +2,27 @@ CREATE DATABASE AgendaiFisioDB
 
 GO
 
+USE AgendaiFisioDB
+GO
+
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY IDENTITY (1, 1),
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     cpf VARCHAR(14) NOT NULL UNIQUE,
     senha VARCHAR(20) NOT NULL,
-    crefito VARCHAR(9) UNIQUE,
+    crefito VARCHAR(9),
     tipo_perfil VARCHAR(10) NOT NULL CHECK (tipo_perfil IN ('PACIENTE', 'TERAPEUTA')),
     aceite_lgpd BIT NOT NULL DEFAULT 0,
     CONSTRAINT CK_Senha_Min CHECK (LEN (senha) >= 8)
 );
+GO
+
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE UNIQUE NONCLUSTERED INDEX IX_Usuario_Crefito 
+ON usuario(crefito) 
+WHERE crefito IS NOT NULL;
 
 CREATE TABLE agendamento (
     id_agendamento INT PRIMARY KEY IDENTITY (1, 1),
@@ -62,3 +72,7 @@ CREATE TABLE arquivo_exame (
     id_prontuario INT NOT NULL,
     CONSTRAINT FK_Arquivo_Prontuario FOREIGN KEY (id_prontuario) REFERENCES prontuario (id_prontuario)
 );
+
+
+SELECT * FROM usuario;
+DELETE FROM usuario WHERE aceite_lgpd = 1; 
