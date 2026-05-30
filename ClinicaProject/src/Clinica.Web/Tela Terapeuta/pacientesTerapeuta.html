@@ -28,7 +28,26 @@
 
         <!-- Área Principal -->
         <main class="main-content">
-            
+            <header class="main-header">
+                <div class="title-group">
+                    <h1>Meus Pacientes</h1>
+                    <p>Gerencie seus pacientes e prontuários.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-novo" onclick="document.getElementById('modalNovoPaciente').showModal()">➕ Novo Paciente</button>
+                </div>
+            </header>
+
+            <!-- Lista de Pacientes -->
+            <section class="consultas-section">
+                <div class="busca-container" style="margin-bottom: 2.5rem; width: 100%; max-width: 450px; padding: 14px 20px; border-radius: 16px;">
+                    <span class="busca-icone" style="color: #94a3b8;">🔍</span>
+                    <input type="text" id="inputBuscaPaciente" placeholder="Buscar paciente por nome..." style="border: none; outline: none; width: 100%; font-family: inherit; font-size: 1rem; font-weight: 500; color: #1e293b; background: transparent;">
+                </div>
+                <div class="consultas-grid" id="gridPacientes">
+                    <!-- Cards injetados via JS -->
+                </div>
+            </section>
         </main>
     </div>
 
@@ -68,23 +87,30 @@
         </div>
     </dialog>
 
-    <!-- MODAL DE BLOQUEIO DE AGENDA -->
-    <dialog id="modalAgenda" class="modal-moderno">
-        <div class="modal-header">
-            <h2>Gerenciar Disponibilidade</h2>
+    <!-- MODAL DE NOVO PACIENTE -->
+    <dialog id="modalNovoPaciente" class="prontuario-modal">
+        <div class="modal-header-clean">
+            <div>
+                <span class="paciente-tag" style="background: #e0f2fe; color: #0284c7;">Cadastro</span>
+                <h2>Novo Paciente</h2>
+            </div>
+            <button type="button" onclick="document.getElementById('modalNovoPaciente').close()" class="btn-close-icon">×</button>
         </div>
-        <div class="modal-body">
-            <div class="passo">
-                <label>Data para Bloqueio</label>
-                <input type="date" id="dataBloqueio" class="input-data">
-            </div>
-            <div class="passo">
-                <label>Selecione os horários para bloquear/liberar</label>
-                <div id="containerHorarios" class="horarios-grid"></div>
-            </div>
-            <div class="botoes-footer">
-                <button onclick="document.getElementById('modalAgenda').close()" class="btn-cancelar">Concluir</button>
-            </div>
+        <div class="modal-body-prontuario">
+            <form id="formNovoPaciente" onsubmit="salvarNovoPaciente(event)">
+                <div class="campo-evolucao" style="margin-bottom: 1.5rem;">
+                    <label for="novoPacienteNome">Nome Completo</label>
+                    <input type="text" id="novoPacienteNome" class="input-prontuario" style="min-height: 55px; padding: 0 15px; border-radius: 14px; font-weight: 600; font-size: 1rem;" placeholder="Ex: Maria Antonieta" required>
+                </div>
+                <div class="campo-evolucao" style="margin-bottom: 2.5rem;">
+                    <label for="novoPacienteTelefone">Telefone / Contato</label>
+                    <input type="text" id="novoPacienteTelefone" class="input-prontuario" style="min-height: 55px; padding: 0 15px; border-radius: 14px; font-weight: 600; font-size: 1rem;" placeholder="(00) 00000-0000" required>
+                </div>
+                <div class="modal-footer-flex">
+                    <button type="button" onclick="document.getElementById('modalNovoPaciente').close()" class="btn-descartar">Cancelar</button>
+                    <button type="submit" class="btn-confirmar-prontuario">Salvar Paciente</button>
+                </div>
+            </form>
         </div>
     </dialog>
 
