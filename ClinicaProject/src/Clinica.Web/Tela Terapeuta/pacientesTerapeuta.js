@@ -1,193 +1,128 @@
 // ============================================================
 // 1. ESTADO GLOBAL E UTILITÁRIOS
 // ============================================================
-const state = {
-    // Busca dados e já realiza a FAXINA AUTOMÁTICA de itens "undefined"
-    get consultas() {
-        const dadosBrutos = JSON.parse(localStorage.getItem("consultas_fisio")) || [];
-        // Filtra apenas consultas válidas para evitar erros visuais
-        const validas = dadosBrutos.filter(c => c && c.nome && c.data && c.id);
-
-        // Se encontrou lixo, limpa o LocalStorage silenciosamente
-        if (dadosBrutos.length !== validas.length) {
-            localStorage.setItem("consultas_fisio", JSON.stringify(validas));
-        }
-        return validas;
+const statePacientes = {
+    get lista() {
+        return JSON.parse(localStorage.getItem("pacientes_terapeuta")) || [];
     },
-    get hoje() {
-        return new Date().toLocaleDateString('pt-br');
-    },
-    get mesAtual() {
-        // Retorna o mês atual formatado (ex: "04")
-        return (new Date().getMonth() + 1).toString().padStart(2, '0');
+    salvar(novaLista) {
+        localStorage.setItem("pacientes_terapeuta", JSON.stringify(novaLista));
     }
 };
 
-const el = {
-    grid: document.getElementById("gridConsultas"), // Onde aparecem os cards
-    dateText: document.getElementById("currentDate"),
-    statsCards: document.querySelectorAll(".stat-value"), // Os círculos/cards de números
-    modalProntuario: document.getElementById("modalProntuario"),
-    nomePacienteProntuario: document.getElementById("nomePacienteProntuario"),
-    textoProntuario: document.getElementById("textoProntuario"),
-    btnSalvarProntuario: document.getElementById("btnSalvarProntuario")
+const elPacientes = {
+    grid: document.getElementById("gridPacientes"),
+    inputBusca: document.getElementById("inputBuscaPaciente"),
+    modalNovo: document.getElementById("modalNovoPaciente"),
+    formNovo: document.getElementById("formNovoPaciente"),
+    nomeInput: document.getElementById("novoPacienteNome"),
+    telefoneInput: document.getElementById("novoPacienteTelefone")
 };
 
 // ============================================================
-// 2. RENDERIZAÇÃO DO DASHBOARD
+// 2. RENDERIZAÇÃO
 // ============================================================
-function renderizarDashboard() {
-    if (!el.grid) return;
-    el.grid.innerHTML = "";
+function renderizarPacientes(filtro = "") {
+    if (!elPacientes.grid) return;
+    elPacientes.grid.innerHTML = "";
 
-    const listaGeral = state.consultas;
-    const hojeStr = state.hoje;
-    const mesAtualStr = state.mesAtual;
+    const pacientes = statePacientes.lista;
+    const pacientesFiltrados = pacientes.filter(p => p.nome.toLowerCase().includes(filtro.toLowerCase()));
 
-    const agora = new Date();
-    const horaAtualMinutos = (agora.getHours() * 60) + agora.getMinutes();
+    if (pacientesFiltrados.length === 0) {
+        elPacientes.grid.innerHTML = `<div class="card-vazio-msg" style="grid-column: 1 / -1; text-align: center; color: #64748b; padding: 3rem; font-style: italic;">Nenhum paciente encontrado.</div>`;
+        return;
+    }
 
-    let totalHoje = 0;
-    let totalMes = 0;
-
-    // Ordenar por horário para exibição organizada
-    const listaOrdenada = listaGeral.sort((a, b) => a.hora.localeCompare(b.hora));
-
-    listaOrdenada.forEach(c => {
-        const dataConsulta = c.data;
-        const mesConsulta = dataConsulta.split('/')[1];
-
-        // Lógica de Contagem para os Widgets Superiores
-        if (dataConsulta === hojeStr) totalHoje++;
-        if (mesConsulta === mesAtualStr) totalMes++;
-
-        // Renderiza no grid apenas se for a consulta de HOJE
-        if (dataConsulta === hojeStr) {
-            const [horaC, minC] = c.hora.split(':').map(Number);
-            const consultaMinutos = (horaC * 60) + minC;
-            const tempoEstimadoSessao = 50;
-
-            let statusClass = "status-azul";
-            let statusTexto = "Agendado";
-
-            // Lógica de Status em tempo real
-            if (horaAtualMinutos >= consultaMinutos && horaAtualMinutos <= (consultaMinutos + tempoEstimadoSessao)) {
-                statusClass = "status-amarelo";
-                statusTexto = "Em Atendimento";
-            } else if (horaAtualMinutos > (consultaMinutos + tempoEstimadoSessao)) {
-                statusClass = "status-verde";
-                statusTexto = "Concluído";
-            }
-
-            const card = document.createElement("div");
-            card.className = "card-consulta";
-            card.innerHTML = `
-                <div class="card-horario">🕒 ${c.hora}</div>
-                <div class="card-info">
-                    <h3 class="card-paciente-nome">${c.nome}</h3>
-                    <p class="card-especialista">${c.especialista || "Fisioterapia"}</p>
-                </div>
-                <div class="card-status ${statusClass}">● ${statusTexto}</div>
-                <div class="card-acoes">
-                    <button class="btn-card-inline" onclick="abrirProntuario('${c.id}')">
-                        Ver Prontuário
-                    </button>
-                    <button class="btn-cancelar-discreto" onclick="cancelarConsulta('${c.id}')" title="Desmarcar">
-                        ✕
-                    </button>
-                </div>
-            `;
-            el.grid.appendChild(card);
-        }
+    pacientesFiltrados.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card-consulta";
+        card.innerHTML = `
+            <div class="card-info">
+                <h3 class="card-paciente-nome" style="font-size: 1.3rem; margin-bottom: 5px; color: var(--brand); font-weight: 800;">${p.nome}</h3>
+                <p class="card-especialista" style="color: var(--texto-muted); font-weight: 600;">📞 ${p.telefone}</p>
+                <p class="card-especialista" style="font-size: 0.8rem; margin-top: 5px; color: var(--texto-muted);">Cadastrado em: ${p.dataCadastro}</p>
+            </div>
+            <div class="card-status status-verde" style="margin-top: 15px;">● Ativo</div>
+            <div class="card-acoes" style="margin-top: 15px;">
+                <button class="btn-card-inline" onclick="abrirProntuarioDoPaciente('${p.id}')">
+                    Ver Prontuário
+                </button>
+            </div>
+        `;
+        elPacientes.grid.appendChild(card);
     });
-
-    // Atualiza os widgets superiores (Consultas Hoje, Mês, Total)
-    if (el.statsCards && el.statsCards.length >= 3) {
-        el.statsCards[0].innerText = totalHoje;
-        el.statsCards[1].innerText = totalMes;
-        el.statsCards[2].innerText = listaGeral.length; // Atendidos/Total
-    }
-
-    if (totalHoje === 0) {
-        el.grid.innerHTML = `<div class="card-vazio-msg">☕ Sem consultas para hoje.</div>`;
-    }
 }
 
 // ============================================================
-// 3. AÇÕES (Global window para funcionar no HTML dinâmico)
+// 3. AÇÕES
 // ============================================================
+window.salvarNovoPaciente = (e) => {
+    e.preventDefault();
+    
+    const nome = elPacientes.nomeInput.value.trim();
+    const telefone = elPacientes.telefoneInput.value.trim();
+    
+    if(!nome || !telefone) return;
 
-window.cancelarConsulta = (id) => {
-    if (confirm("Deseja desmarcar este paciente? O horário será liberado em todas as telas.")) {
-        const consultas = JSON.parse(localStorage.getItem("consultas_fisio")) || [];
-        const consultaParaRemover = consultas.find(c => String(c.id) === String(id));
+    const novoPaciente = {
+        id: Date.now().toString(),
+        nome: nome,
+        telefone: telefone,
+        dataCadastro: new Date().toLocaleDateString('pt-br'),
+        evolucao: ""
+    };
 
-        if (consultaParaRemover) {
-            // Remove da lista principal
-            const novaLista = consultas.filter(c => String(c.id) !== String(id));
-            localStorage.setItem("consultas_fisio", JSON.stringify(novaLista));
+    const lista = statePacientes.lista;
+    lista.push(novoPaciente);
+    statePacientes.salvar(lista);
 
-            // Libera o cadeado na agenda global
-            const agendaGlobal = JSON.parse(localStorage.getItem('agendaFisioData')) || {};
-            if (agendaGlobal[consultaParaRemover.dataISO]) {
-                delete agendaGlobal[consultaParaRemover.dataISO][consultaParaRemover.hora];
-                localStorage.setItem('agendaFisioData', JSON.stringify(agendaGlobal));
-            }
-
-            renderizarDashboard();
-            window.dispatchEvent(new Event('storage'));
-        }
-    }
+    elPacientes.formNovo.reset();
+    elPacientes.modalNovo.close();
+    renderizarPacientes(elPacientes.inputBusca ? elPacientes.inputBusca.value : "");
+    
+    alert("Paciente cadastrado com sucesso!");
 };
 
-window.abrirProntuario = (id) => {
-    const consultas = state.consultas;
-    const consulta = consultas.find(c => String(c.id) === String(id));
-
-    if (consulta) {
-        el.nomePacienteProntuario.innerText = consulta.nome;
-        // Recupera evolução anterior se existir, senão mostra a queixa
-        el.textoProntuario.value = consulta.evolucao || `--- QUEIXA DO PACIENTE ---\n${consulta.sintomas || "Nenhum relato."}\n\n--- EVOLUÇÃO MÉDICA ---\n`;
-
-        el.modalProntuario.showModal();
-
-        // Configura o botão de salvar para este paciente específico
-        el.btnSalvarProntuario.onclick = () => {
-            const todas = JSON.parse(localStorage.getItem("consultas_fisio")) || [];
-            const index = todas.findIndex(p => String(p.id) === String(id));
-
-            if (index !== -1) {
-                todas[index].evolucao = el.textoProntuario.value;
-                localStorage.setItem("consultas_fisio", JSON.stringify(todas));
-
-                el.btnSalvarProntuario.innerText = "⌛ Salvando...";
+window.abrirProntuarioDoPaciente = (id) => {
+    const paciente = statePacientes.lista.find(p => p.id === id);
+    if(paciente) {
+        const modal = document.getElementById("modalProntuario");
+        document.getElementById("nomePacienteProntuario").innerText = paciente.nome;
+        const textarea = document.getElementById("textoProntuario");
+        textarea.value = paciente.evolucao || "";
+        
+        document.getElementById("btnSalvarProntuario").onclick = () => {
+            paciente.evolucao = textarea.value;
+            const lista = statePacientes.lista;
+            const idx = lista.findIndex(p => p.id === id);
+            if(idx !== -1) {
+                lista[idx] = paciente;
+                statePacientes.salvar(lista);
+                
+                const btn = document.getElementById("btnSalvarProntuario");
+                btn.innerText = "⌛ Salvando...";
                 setTimeout(() => {
-                    alert(`✅ Evolução de ${consulta.nome} salva com sucesso!`);
-                    el.btnSalvarProntuario.innerText = "Salvar Evolução";
-                    el.modalProntuario.close();
+                    alert("Prontuário salvo com sucesso!");
+                    btn.innerText = "Salvar Evolução";
+                    modal.close();
                 }, 500);
             }
         };
+        
+        modal.showModal();
     }
 };
 
 // ============================================================
-// 4. SINCRONIZAÇÃO E INICIALIZAÇÃO
+// 4. LISTENERS E INICIALIZAÇÃO
 // ============================================================
-
-window.addEventListener('storage', (e) => {
-    if (e.key === 'consultas_fisio' || e.key === 'agendaFisioData') {
-        renderizarDashboard();
-    }
-});
+if (elPacientes.inputBusca) {
+    elPacientes.inputBusca.addEventListener("input", (e) => {
+        renderizarPacientes(e.target.value);
+    });
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Data no topo da página
-    if (el.dateText) {
-        el.dateText.innerText = new Date().toLocaleDateString('pt-br', {
-            weekday: 'long', day: 'numeric', month: 'long'
-        });
-    }
-
-    renderizarDashboard();
+    renderizarPacientes();
 });
