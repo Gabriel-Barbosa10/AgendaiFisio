@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil - AgendaiFisio</title>
     <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="responsive.css">
     <style>
         /* ── Estilos adicionais para a página de perfil ── */
         .info-row {
@@ -130,11 +129,11 @@
         </div>
 
         <div class="perfil-container" id="perfilMenu">
-            <div class="avatar">AC</div>
+            <div class="avatar">DG</div>
             <div class="dropdown-conta">
                 <div class="user-header">
-                    <strong>Arnaldo Candido</strong>
-                    <span>arnaldocandido@email.com</span>
+                    <strong>Davi Gusmão</strong>
+                    <span>davigusmao@email.com</span>
                 </div>
                 <hr>
                 <a href="TelaPaciente.html">👤 Ver Meu Perfil</a>
@@ -154,9 +153,9 @@
                 <span class="badge">Dados Pessoais</span>
 
                 <div class="card-perfil-header">
-                    <div class="avatar-grande">AC</div>
-                    <h2>Arnaldo Candido</h2>
-                    <p>arnaldocandido@email.com</p>
+                    <div class="avatar-grande">DG</div>
+                    <h2>Davi Gusmão</h2>
+                    <p>davigusmao@email.com</p>
                     <span class="tag-status">✅ Paciente Ativo</span>
                 </div>
 
@@ -166,7 +165,7 @@
                 </div>
                 <div class="info-row">
                     <span>Data de Nascimento</span>
-                    <span>15/03/1989</span>
+                    <span>15/03/2006</span>
                 </div>
                 <div class="info-row">
                     <span>Telefone</span>
@@ -221,6 +220,5 @@
         </div>
     </main>
 
-    <script src="mobile.js"></script>
 </body>
 </html>

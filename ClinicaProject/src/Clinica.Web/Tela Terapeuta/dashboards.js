@@ -153,7 +153,7 @@ function finalizarAgendamento() {
     const data = el.inputData.value.split("-").reverse().join("/");
 
     state.consultas.push({
-        nome: "Davi Gusmão",
+        nome: "Arnaldo Candido",
         medico,
         hora: hora.innerText,
         data

@@ -49,7 +49,7 @@ window.onload = function() {
             // SIMULAÇÃO DE SUCESSO
             const tokenSimulado = "jwt_" + Math.random().toString(36).substr(2);
             localStorage.setItem('token_acesso', tokenSimulado);
-            localStorage.setItem('usuario_nome', "Davi Gusmão");
+            localStorage.setItem('usuario_nome', "Arnaldo Candido");
 
             btnEntrar.innerText = "Acessando...";
             btnEntrar.style.opacity = "0.7";

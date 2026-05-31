@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro Paciente - Sistema de Agendamento</title>
     <link rel="stylesheet" href="teladecadastro.css">
-    <link rel="stylesheet" href="responsive.css">
+    
 </head>
 <body>
 
@@ -64,7 +64,6 @@
         </form>
     </div>
 
-    <script src="mobile.js"></script>
     <script src="cadastro.js"></script>
 </body>
 </html>

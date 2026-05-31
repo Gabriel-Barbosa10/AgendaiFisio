@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="cadastrodeTE.css">
     <link rel="stylesheet" href="cadastrosTerapeuta.css">
     <link rel="stylesheet" href="teladecadastro.css">
-    <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
     <div class="selecao-container">
@@ -45,7 +44,6 @@
 
     <!-- Se for apenas navegação, o cadastro.js pode não ser necessário nesta tela, 
          mas mantive caso tenha animações de entrada -->
-    <script src="mobile.js"></script>
     <script src="cadastro.js"></script>
 </body>
 </html>

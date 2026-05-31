@@ -8,7 +8,6 @@
     <!-- Fonte Moderna -->
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="teladecadastro.css">
-    <link rel="stylesheet" href="responsive.css">
 </head>
 
 <body>
@@ -89,7 +88,6 @@
         </div>
     </div>
 
-    <script src="mobile.js"></script>
     <script src="cadastro.js"></script>
 </body>
 

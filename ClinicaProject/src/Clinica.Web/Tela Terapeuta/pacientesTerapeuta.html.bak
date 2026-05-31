@@ -7,7 +7,6 @@
     <title>Painel do Terapeuta - AgendaiFisio</title>
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="dashboards.css">
-    <link rel="stylesheet" href="responsive.css">
 </head>
 
 <body>
@@ -22,7 +21,7 @@
                 <a href="pacientesTerapeuta.html" class="active">👥 Meus Pacientes</a>
             </nav>
             <div class="sidebar-user">
-                <strong>Arnaldo Candido</strong>
+                <strong>Davi Gusmão</strong>
                 <p>Terapeuta</p>
             </div>
         </aside>
@@ -105,7 +104,7 @@
                 </div>
                 <div class="campo-evolucao" style="margin-bottom: 2.5rem;">
                     <label for="novoPacienteTelefone">Telefone / Contato</label>
-                    <input type="tel" id="novoPacienteTelefone" class="input-prontuario" style="min-height: 55px; padding: 0 15px; border-radius: 14px; font-weight: 600; font-size: 1rem;" placeholder="(00) 00000-0000" maxlength="15" inputmode="numeric" pattern="[0-9()\s\-]*" required>
+                    <input type="text" id="novoPacienteTelefone" class="input-prontuario" style="min-height: 55px; padding: 0 15px; border-radius: 14px; font-weight: 600; font-size: 1rem;" placeholder="(00) 00000-0000" required>
                 </div>
                 <div class="modal-footer-flex">
                     <button type="button" onclick="document.getElementById('modalNovoPaciente').close()" class="btn-descartar">Cancelar</button>
@@ -115,7 +114,6 @@
         </div>
     </dialog>
 
-    <script src="mobile.js"></script>
     <script src="pacientesTerapeuta.js"></script>
 </body>
 
