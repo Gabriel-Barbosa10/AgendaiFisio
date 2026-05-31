@@ -1,11 +1,11 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading;
-using AgendaiFisioConsole.Models;
+using AgendaiFisio.Models;
 using Microsoft.Data.SqlClient;
-using AgendaiFisioConsole.Data;
+using AgendaiFisio.Data;
 
-namespace AgendaiFisioConsole.Services
+namespace AgendaiFisio.Services
 {
     public class AuthService
     {
@@ -21,55 +21,62 @@ namespace AgendaiFisioConsole.Services
 
             Console.WriteLine("\n--- LOGIN ---");
             Console.Write("Email: ");
-            string email = Console.ReadLine();
+            string email = Console.ReadLine()?.Trim();
             Console.Write("Senha: ");
             string senha = LerSenha();
 
             using var conn = DatabaseConnection.GetConnection();
-            string query = "SELECT id_usuario, nome, email, cpf, senha, crefito, tipo_perfil, aceite_lgpd FROM usuario WHERE email = @email AND senha = @senha";
+            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+
+            string query = "SELECT id_usuario, nome, email, cpf, senha, crefito, tipo_perfil, aceite_lgpd FROM usuario WHERE email = @email";
             using var cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@email", email);
-            cmd.Parameters.AddWithValue("@senha", senha);
 
             using var reader = cmd.ExecuteReader();
+            
             if (reader.Read())
             {
-                falhasLogin = 0; // Resetar falhas
-                return new Usuario
-                {
-                    IdUsuario = reader.GetInt32(0),
-                    Nome = reader.GetString(1),
-                    Email = reader.GetString(2),
-                    Cpf = reader.GetString(3),
-                    Senha = reader.GetString(4),
-                    Crefito = reader.IsDBNull(5) ? null : reader.GetString(5),
-                    TipoPerfil = reader.GetString(6),
-                    AceiteLgpd = reader.GetBoolean(7)
-                };
-            }
-            else
-            {
-                falhasLogin++;
-                Console.WriteLine("\n[ERRO] Email ou senha incorretos.");
-                
-                if (falhasLogin >= 6)
-                {
-                    Console.WriteLine("[AVISO] Muitas tentativas falhas. Bloqueando por 3 minutos.");
-                    bloqueadoAte = DateTime.Now.AddMinutes(3);
-                    AguardarDesbloqueio();
-                }
-                else if (falhasLogin >= 3)
-                {
-                    Console.Write("[AVISO] Você esqueceu a senha? (S/N): ");
-                    if (Console.ReadLine().ToUpper() == "S")
-                    {
-                        Console.WriteLine("Por favor, entre em contato com o administrador do sistema para resetar sua senha.");
-                    }
-                }
-                return null;
-            }
-        }
+                string hashDoBanco = reader.GetString(4);
 
+                if (Security.VerificarSenha(senha, hashDoBanco))
+                {
+                    falhasLogin = 0; 
+                    
+                    return new Usuario
+                    {
+                        IdUsuario = reader.GetInt32(0),
+                        Nome = reader.GetString(1),
+                        Email = reader.GetString(2),
+                        Cpf = reader.GetString(3),
+                        Senha = hashDoBanco,
+                        Crefito = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        TipoPerfil = reader.GetString(6),
+                        AceiteLgpd = reader.GetBoolean(7)
+                    };
+                }
+            }
+
+            // 4. Se o e-mail não existir OU a senha estiver errada, cai aqui:
+            falhasLogin++;
+            Console.WriteLine("\n[ERRO] Email ou senha incorretos.");
+            
+            if (falhasLogin >= 6)
+            {
+                Console.WriteLine("[AVISO] Muitas tentativas falhas. Bloqueando por 3 minutos.");
+                bloqueadoAte = DateTime.Now.AddMinutes(3);
+                AguardarDesbloqueio();
+            }
+            else if (falhasLogin >= 3)
+            {
+                Console.Write("[AVISO] Você esqueceu a senha? (S/N): ");
+                if (Console.ReadLine()?.ToUpper() == "S")
+                {
+                    Console.WriteLine("Por favor, entre em contato com o administrador do sistema para resetar sua senha.");
+                }
+            }
+            
+            return null;
+        }
         private void AguardarDesbloqueio()
         {
             while (DateTime.Now < bloqueadoAte.Value)
@@ -85,16 +92,27 @@ namespace AgendaiFisioConsole.Services
 
         public void NovoUsuario()
         {
-            Console.WriteLine("\n--- NOVO USUÁRIO ---");
-            Console.WriteLine("1. Sou Paciente");
-            Console.WriteLine("2. Sou Terapeuta");
-            Console.Write("Escolha seu perfil: ");
-            string opcao = Console.ReadLine();
-            
-            string tipoPerfil = opcao == "2" ? "TERAPEUTA" : "PACIENTE";
+            string opcao;
+            while (true)
+            {
+                Console.WriteLine("\n--- NOVO USUÁRIO ---");
+                Console.WriteLine("1. Sou Paciente");
+                Console.WriteLine("2. Sou Terapeuta");
+                Console.Write("Escolha seu perfil: ");
+
+                opcao = Console.ReadLine().Trim();
+                if (opcao == "1" || opcao == "2")
+                {
+                    break;
+                }
+                System.Console.WriteLine("[ERRO] Opcao invalida! Digite apenas 1 ou 2.\n");
+                
+            }
+
+            string tipoPerfil = opcao == "2" ? "TERAPEUTA" : "PACIENTE"; 
+
 
             string nome;
-
             while (true)
             {
                 Console.Write("Nome: ");
@@ -201,13 +219,14 @@ namespace AgendaiFisioConsole.Services
 
             try
             {
+                string senhaHash = Security.CriptografarSenha(senha);
                 using var conn = DatabaseConnection.GetConnection();
                 string query = "INSERT INTO usuario (nome, email, cpf, senha, crefito, tipo_perfil, aceite_lgpd) VALUES (@nome, @email, @cpf, @senha, @crefito, @tipo_perfil, @aceite_lgpd)";
                 using var cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@nome", nome);
                 cmd.Parameters.AddWithValue("@email", email);
                 cmd.Parameters.AddWithValue("@cpf", cpf);
-                cmd.Parameters.AddWithValue("@senha", senha);
+                cmd.Parameters.AddWithValue("@senha", senhaHash);
                 cmd.Parameters.AddWithValue("@crefito", (object)crefito ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@tipo_perfil", tipoPerfil);
                 cmd.Parameters.AddWithValue("@aceite_lgpd", aceite);

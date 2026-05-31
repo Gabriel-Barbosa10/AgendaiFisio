@@ -1,9 +1,9 @@
 using System;
-using AgendaiFisioConsole.Services;
-using AgendaiFisioConsole.Models;
-using AgendaiFisioConsole.Data;
+using AgendaiFisio.Services;
+using AgendaiFisio.Models;
+using AgendaiFisio.Data;
 
-namespace AgendaiFisioConsole
+namespace AgendaiFisio
 {
     class Program
     {
@@ -14,7 +14,7 @@ namespace AgendaiFisioConsole
             Console.WriteLine("=======================================");
 
             // Testar a conexão com o banco ao iniciar
-            // DatabaseConnection.TestConnection();
+            //DatabaseConnection.TestConnection();
             
             // Inserir dados de teste caso o banco esteja vazio
             // DatabaseConnection.SeedDatabase();

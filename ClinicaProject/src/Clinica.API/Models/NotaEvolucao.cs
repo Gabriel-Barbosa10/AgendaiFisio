@@ -1,6 +1,6 @@
 using System;
 
-namespace AgendaiFisioConsole.Models
+namespace AgendaiFisio.Models
 {
     public class NotaEvolucao
     {

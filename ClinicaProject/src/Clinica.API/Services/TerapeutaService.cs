@@ -4,10 +4,10 @@ using Microsoft.Data.SqlClient;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using AgendaiFisioConsole.Models;
-using AgendaiFisioConsole.Data;
+using AgendaiFisio.Models;
+using AgendaiFisio.Data;
 
-namespace AgendaiFisioConsole.Services
+namespace AgendaiFisio.Services
 {
     public class TerapeutaService
     {

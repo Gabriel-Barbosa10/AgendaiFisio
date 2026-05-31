@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Data.SqlClient;
-using AgendaiFisioConsole.Models;
-using AgendaiFisioConsole.Data;
+using AgendaiFisio.Models;
+using AgendaiFisio.Data;
 
-namespace AgendaiFisioConsole.Services
+namespace AgendaiFisio.Services
 {
     public class PacienteService
     {

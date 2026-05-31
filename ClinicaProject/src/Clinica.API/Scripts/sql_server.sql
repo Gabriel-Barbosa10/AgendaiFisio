@@ -10,7 +10,7 @@ CREATE TABLE usuario (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     cpf VARCHAR(14) NOT NULL UNIQUE,
-    senha VARCHAR(20) NOT NULL,
+    senha VARCHAR(100) NOT NULL,
     crefito VARCHAR(9),
     tipo_perfil VARCHAR(10) NOT NULL CHECK (tipo_perfil IN ('PACIENTE', 'TERAPEUTA')),
     aceite_lgpd BIT NOT NULL DEFAULT 0,
@@ -75,4 +75,4 @@ CREATE TABLE arquivo_exame (
 
 
 SELECT * FROM usuario;
-DELETE FROM usuario WHERE aceite_lgpd = 1; 
+DELETE FROM usuario WHERE senha = 'password123'; 

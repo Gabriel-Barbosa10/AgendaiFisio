@@ -1,12 +1,12 @@
 using System;
 using Microsoft.Data.SqlClient;
 
-namespace AgendaiFisioConsole.Data
+namespace AgendaiFisio.Data
 {
     public static class DatabaseConnection
     {
         //string de conexão local
-        private const string ConnectionString = "Server=localhost,1434;Database=AgendaiFisioDB;User Id=sa;Password=alunosUnip*;TrustServerCertificate=True;Encrypt=False;";
+        private const string ConnectionString = "Server=localhost,1433;Database=AgendaiFisioDB;User Id=sa;Password=alunosUnip*;TrustServerCertificate=True;Encrypt=False;";
 
         public static SqlConnection GetConnection()
         {
