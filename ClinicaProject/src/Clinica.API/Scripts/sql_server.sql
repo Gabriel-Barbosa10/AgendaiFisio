@@ -26,9 +26,11 @@ WHERE crefito IS NOT NULL;
 
 CREATE TABLE agendamento (
     id_agendamento INT PRIMARY KEY IDENTITY (1, 1),
-    id_paciente INT NOT NULL,
+    id_paciente INT NULL,
     id_terapeuta INT NOT NULL,
-    data_hora DATETIME NOT NULL,
+    data_agenda DATE NOT NULL,
+    hora_agenda DATETIME  NOT NULL,
+    tipo_registro VARCHAR(20) NOT NULL DEFAULT 'CONSULTA',
     descricao_sintomas VARCHAR(1000) NULL,
     status VARCHAR(15) NOT NULL DEFAULT 'PENDENTE' CHECK (
         status IN (
@@ -75,4 +77,3 @@ CREATE TABLE arquivo_exame (
 
 
 SELECT * FROM usuario;
-DELETE FROM usuario WHERE senha = 'password123'; 
