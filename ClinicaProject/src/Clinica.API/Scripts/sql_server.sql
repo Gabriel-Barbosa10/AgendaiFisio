@@ -76,4 +76,4 @@ CREATE TABLE arquivo_exame (
 );
 
 
-SELECT * FROM usuario;
+SELECT * FROM agendamento;

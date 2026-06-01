@@ -2,8 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading;
 using AgendaiFisio.Models;
-using Microsoft.Data.SqlClient;
-using AgendaiFisio.Data;
+using AgendaiFisio.Data.Repositories;
 
 namespace AgendaiFisio.Services
 {
@@ -11,6 +10,12 @@ namespace AgendaiFisio.Services
     {
         private static int falhasLogin = 0;
         private static DateTime? bloqueadoAte = null;
+        private readonly IUsuarioRepository _usuarioRepository;
+
+        public AuthService(IUsuarioRepository usuarioRepository)
+        {
+            _usuarioRepository = usuarioRepository;
+        }
 
         public Usuario Login()
         {
@@ -18,41 +23,23 @@ namespace AgendaiFisio.Services
             {
                 AguardarDesbloqueio();
             }
-
+            Console.Clear();
             Console.WriteLine("\n--- LOGIN ---");
             Console.Write("Email: ");
             string email = Console.ReadLine()?.Trim();
             Console.Write("Senha: ");
             string senha = LerSenha();
 
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
-            string query = "SELECT id_usuario, nome, email, cpf, senha, crefito, tipo_perfil, aceite_lgpd FROM usuario WHERE email = @email";
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@email", email);
-
-            using var reader = cmd.ExecuteReader();
+            Usuario usuario = _usuarioRepository.ObterPorEmail(email);
             
-            if (reader.Read())
+            if (usuario != null)
             {
-                string hashDoBanco = reader.GetString(4);
+                string hashDoBanco = usuario.Senha;
 
                 if (Security.VerificarSenha(senha, hashDoBanco))
                 {
                     falhasLogin = 0; 
-                    
-                    return new Usuario
-                    {
-                        IdUsuario = reader.GetInt32(0),
-                        Nome = reader.GetString(1),
-                        Email = reader.GetString(2),
-                        Cpf = reader.GetString(3),
-                        Senha = hashDoBanco,
-                        Crefito = reader.IsDBNull(5) ? null : reader.GetString(5),
-                        TipoPerfil = reader.GetString(6),
-                        AceiteLgpd = reader.GetBoolean(7)
-                    };
+                    return usuario;
                 }
             }
 
@@ -77,6 +64,7 @@ namespace AgendaiFisio.Services
             
             return null;
         }
+
         private void AguardarDesbloqueio()
         {
             while (DateTime.Now < bloqueadoAte.Value)
@@ -92,25 +80,34 @@ namespace AgendaiFisio.Services
 
         public void NovoUsuario()
         {
-            string opcao;
-            while (true)
-            {
-                Console.WriteLine("\n--- NOVO USUÁRIO ---");
-                Console.WriteLine("1. Sou Paciente");
-                Console.WriteLine("2. Sou Terapeuta");
-                Console.Write("Escolha seu perfil: ");
+        string opcao;
 
-                opcao = Console.ReadLine().Trim();
-                if (opcao == "1" || opcao == "2")
-                {
-                    break;
-                }
-                System.Console.WriteLine("[ERRO] Opcao invalida! Digite apenas 1 ou 2.\n");
-                
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("\n--- NOVO USUÁRIO ---");
+            Console.WriteLine("(Pressione ENTER vazio a qualquer momento para cancelar e voltar)");
+            Console.WriteLine("1. Sou Paciente");
+            Console.WriteLine("2. Sou Terapeuta");
+            Console.Write("Escolha seu perfil: ");
+
+            opcao = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrWhiteSpace(opcao)) 
+            {
+                Console.WriteLine("\n[INFO] Cadastro cancelado. Voltando ao menu...");
+                return; 
             }
 
-            string tipoPerfil = opcao == "2" ? "TERAPEUTA" : "PACIENTE"; 
+            if (opcao == "1" || opcao == "2")
+            {
+                break;
+            }
 
+            Console.WriteLine("[ERRO] Opção inválida! Digite apenas 1 ou 2.\n");
+        }
+
+        string tipoPerfil = opcao == "2" ? "TERAPEUTA" : "PACIENTE";
 
             string nome;
             while (true)
@@ -138,23 +135,12 @@ namespace AgendaiFisio.Services
                     continue;
                 }
                 
-                using (var conn = DatabaseConnection.GetConnection())
+                if (_usuarioRepository.ExisteEmail(email))
                 {
-                    if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
-                    string query = "SELECT COUNT(1) FROM usuario WHERE email = @email";
-                    using (var cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@email", email);
-                        int totalUsuarios = (int)cmd.ExecuteScalar();
-                        
-                        if (totalUsuarios > 0)
-                        {
-                            Console.WriteLine("[ERRO] Email já cadastrado.");
-                            continue;
-                        }
-                    }
+                    Console.WriteLine("[ERRO] Email já cadastrado.");
+                    continue;
                 }
+                
                 break;
             }
 
@@ -168,14 +154,7 @@ namespace AgendaiFisio.Services
                     continue;
                 }
 
-                //Abre a conexão e verifica se já existe no banco
-                using var conn = DatabaseConnection.GetConnection();
-                string query = "SELECT COUNT(1) FROM usuario WHERE cpf = @cpf";
-                using var cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@cpf", cpf);
-
-                int totalUsuarios = (int)cmd.ExecuteScalar();
-                if (totalUsuarios > 0)
+                if (_usuarioRepository.ExisteCpf(cpf))
                 {
                     Console.WriteLine("[ERRO] CPF já cadastrado.");
                     continue;
@@ -220,64 +199,80 @@ namespace AgendaiFisio.Services
             try
             {
                 string senhaHash = Security.CriptografarSenha(senha);
-                using var conn = DatabaseConnection.GetConnection();
-                string query = "INSERT INTO usuario (nome, email, cpf, senha, crefito, tipo_perfil, aceite_lgpd) VALUES (@nome, @email, @cpf, @senha, @crefito, @tipo_perfil, @aceite_lgpd)";
-                using var cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@nome", nome);
-                cmd.Parameters.AddWithValue("@email", email);
-                cmd.Parameters.AddWithValue("@cpf", cpf);
-                cmd.Parameters.AddWithValue("@senha", senhaHash);
-                cmd.Parameters.AddWithValue("@crefito", (object)crefito ?? DBNull.Value);
-                cmd.Parameters.AddWithValue("@tipo_perfil", tipoPerfil);
-                cmd.Parameters.AddWithValue("@aceite_lgpd", aceite);
+                
+                Usuario novoUsuario;
+                if (tipoPerfil == "TERAPEUTA")
+                {
+                    novoUsuario = new Terapeuta
+                    {
+                        Nome = nome,
+                        Email = email,
+                        Cpf = cpf,
+                        Senha = senhaHash,
+                        Crefito = crefito,
+                        AceiteLgpd = aceite
+                    };
+                }
+                else
+                {
+                    novoUsuario = new Paciente
+                    {
+                        Nome = nome,
+                        Email = email,
+                        Cpf = cpf,
+                        Senha = senhaHash,
+                        AceiteLgpd = aceite
+                    };
+                }
 
-                cmd.ExecuteNonQuery();
+                _usuarioRepository.Criar(novoUsuario);
                 Console.WriteLine("\n[SUCESSO] Usuário cadastrado com sucesso!");
+
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine($"\n[ERRO DB] {ex.Message}");
             }
         }
 
-    private bool ValidarCpf(string cpf)
-    {
-        if (string.IsNullOrWhiteSpace(cpf)) return false;
-
-        // Remove qualquer caractere que não seja número
-        cpf = Regex.Replace(cpf, "[^0-9]", "");
-
-        // CPF deve ter 11 dígitos e não pode ter todos os números iguais
-        if (cpf.Length != 11 || new string(cpf[0], 11) == cpf) return false;
-
-        // Validação do Primeiro Dígito Verificador
-        int[] multiplicadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-        int soma = 0;
-
-        for (int i = 0; i < 9; i++)
+        private bool ValidarCpf(string cpf)
         {
-            soma += (cpf[i] - '0') * multiplicadores1[i];
+            if (string.IsNullOrWhiteSpace(cpf)) return false;
+
+            // Remove qualquer caractere que não seja número
+            cpf = Regex.Replace(cpf, "[^0-9]", "");
+
+            // CPF deve ter 11 dígitos e não pode ter todos os números iguais
+            if (cpf.Length != 11 || new string(cpf[0], 11) == cpf) return false;
+
+            // Validação do Primeiro Dígito Verificador
+            int[] multiplicadores1 = { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int soma = 0;
+
+            for (int i = 0; i < 9; i++)
+            {
+                soma += (cpf[i] - '0') * multiplicadores1[i];
+            }
+
+            int resto = soma % 11;
+            int digito1 = resto < 2 ? 0 : 11 - resto;
+
+            if (cpf[9] - '0' != digito1) return false;
+
+            // Validação do Segundo Dígito Verificador
+            int[] multiplicadores2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            soma = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                soma += (cpf[i] - '0') * multiplicadores2[i];
+            }
+
+            resto = soma % 11;
+            int digito2 = resto < 2 ? 0 : 11 - resto;
+
+            return cpf[10] - '0' == digito2;
         }
-
-        int resto = soma % 11;
-        int digito1 = resto < 2 ? 0 : 11 - resto;
-
-        if (cpf[9] - '0' != digito1) return false;
-
-        // Validação do Segundo Dígito Verificador
-        int[] multiplicadores2 = { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
-        soma = 0;
-
-        for (int i = 0; i < 10; i++)
-        {
-            soma += (cpf[i] - '0') * multiplicadores2[i];
-        }
-
-        resto = soma % 11;
-        int digito2 = resto < 2 ? 0 : 11 - resto;
-
-        return cpf[10] - '0' == digito2;
-    }
 
         private string LerSenha()
         {

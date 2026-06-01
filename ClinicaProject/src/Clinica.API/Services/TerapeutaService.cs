@@ -1,22 +1,25 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using AgendaiFisio.Models;
-using AgendaiFisio.Data;
+using AgendaiFisio.Data.Repositories;
 
 namespace AgendaiFisio.Services
 {
-    public class TerapeutaService
+    public class TerapeutaService : IMenuService
     {
         private readonly Usuario _terapeuta;
+        private readonly IAgendamentoRepository _agendamentoRepository;
+        private readonly IProntuarioRepository _prontuarioRepository;
 
-        public TerapeutaService(Usuario terapeuta)
+        public TerapeutaService(Usuario terapeuta, IAgendamentoRepository agendamentoRepository, IProntuarioRepository prontuarioRepository)
         {
             _terapeuta = terapeuta;
+            _agendamentoRepository = agendamentoRepository;
+            _prontuarioRepository = prontuarioRepository;
             QuestPDF.Settings.License = LicenseType.Community;
         }
 
@@ -53,39 +56,21 @@ namespace AgendaiFisio.Services
         {
             Console.Clear();
             Console.WriteLine("\n--- MINHAS CONSULTAS ---");
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
-            string query = @"
-                SELECT a.id_agendamento, a.hora_agenda, p.nome, a.status, a.descricao_sintomas, a.id_paciente, a.tipo_registro
-                FROM agendamento a
-                LEFT JOIN usuario p ON a.id_paciente = p.id_usuario
-                WHERE a.id_terapeuta = @terapeuta
-                ORDER BY a.hora_agenda ASC";
-
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@terapeuta", _terapeuta.IdUsuario);
-            using var reader = cmd.ExecuteReader();
+            
+            List<AgendamentoDto> agendamentos = _agendamentoRepository.ObterAgendamentosDoTerapeuta(_terapeuta.IdUsuario);
 
             bool achou = false;
-            while (reader.Read())
+            foreach (var ag in agendamentos)
             {
                 achou = true;
-                int id = reader.GetInt32(0);
-                DateTime horaAgenda = reader.GetDateTime(1);
-                string paciente = reader.IsDBNull(2) ? "Nenhum" : reader.GetString(2);
-                string status = reader.GetString(3);
-                string sintomas = reader.IsDBNull(4) ? "Nenhum" : reader.GetString(4);
-                int? idPaciente = reader.IsDBNull(5) ? (int?)null : reader.GetInt32(5);
-                string tipoRegistro = reader.GetString(6);
 
-                if (tipoRegistro == "BLOQUEIO" || idPaciente == _terapeuta.IdUsuario) 
+                if (ag.TipoRegistro == "BLOQUEIO" || ag.IdPaciente == _terapeuta.IdUsuario) 
                 {
-                    Console.WriteLine($"[BLOQUEIO DE AGENDA] #{id} | Data/Hora: {horaAgenda:dd/MM/yyyy HH:mm}");
+                    Console.WriteLine($"[BLOQUEIO DE AGENDA] #{ag.IdAgendamento} | Data/Hora: {ag.HoraAgenda:dd/MM/yyyy HH:mm}");
                 }
                 else
                 {
-                    Console.WriteLine($"Consulta #{id} | Data/Hora: {horaAgenda:dd/MM/yyyy HH:mm} | Paciente: {paciente} | Status: {status} | Sintomas: {sintomas}");
+                    Console.WriteLine($"Consulta #{ag.IdAgendamento} | Data/Hora: {ag.HoraAgenda:dd/MM/yyyy HH:mm} | Paciente: {ag.NomePessoa} | Status: {ag.Status} | Sintomas: {ag.DescricaoSintomas}");
                 }
             }
 
@@ -140,7 +125,7 @@ namespace AgendaiFisio.Services
             DateTime dataBloqueio = proximosDias[opcaoData - 1];
 
             // 3. BUSCAR DETALHES DOS HORÁRIOS NO BANCO
-            Dictionary<int, string> statusHorarios = ObterStatusHorariosDoBanco(dataBloqueio);
+            Dictionary<int, string> statusHorarios = _agendamentoRepository.ObterStatusHorariosDoBanco(dataBloqueio);
 
             Console.WriteLine($"\nHorários para o dia {dataBloqueio:dd/MM/yyyy}:");
             
@@ -198,7 +183,8 @@ namespace AgendaiFisio.Services
             }
 
             // 5. SALVAR NO BANCO
-            SalvarBloqueioNoBanco(dataBloqueio, horaBloqueio);
+            DateTime dataHoraCompleta = new DateTime(dataBloqueio.Year, dataBloqueio.Month, dataBloqueio.Day, horaBloqueio, 0, 0);
+            _agendamentoRepository.CriarAgendamento(null, _terapeuta.IdUsuario, dataBloqueio, dataHoraCompleta, "BLOQUEIO", "CONFIRMADO", "Horário bloqueado pelo terapeuta.");
             
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\n[SUCESSO] Horário das {horaBloqueio}:00 no dia {dataBloqueio:dd/MM/yyyy} bloqueado!");
@@ -225,35 +211,16 @@ namespace AgendaiFisio.Services
                 return;
             }
 
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+            AgendamentoInfo infoAgendamento = _agendamentoRepository.ObterInfoAgendamento(idAgendamento, _terapeuta.IdUsuario);
             
-            string qCheck = "SELECT id_paciente, status, tipo_registro FROM agendamento WHERE id_agendamento = @id_agendamento AND id_terapeuta = @id_terapeuta";
-            using var cmdCheck = new SqlCommand(qCheck, conn);
-            cmdCheck.Parameters.AddWithValue("@id_agendamento", idAgendamento);
-            cmdCheck.Parameters.AddWithValue("@id_terapeuta", _terapeuta.IdUsuario);
-            
-            int? idPaciente = null;
-            string status = "";
-            string tipoRegistro = "";
-
-            using (var reader = cmdCheck.ExecuteReader())
+            if (infoAgendamento == null)
             {
-                if (reader.Read())
-                {
-                    idPaciente = reader.IsDBNull(0) ? (int?)null : reader.GetInt32(0);
-                    status = reader.GetString(1);
-                    tipoRegistro = reader.GetString(2);
-                }
-                else
-                {
-                    Console.WriteLine("[ERRO] Consulta não encontrada ou não pertence a você. Pressione qualquer tecla...");
-                    Console.ReadKey(true);
-                    return;
-                }
+                Console.WriteLine("[ERRO] Consulta não encontrada ou não pertence a você. Pressione qualquer tecla...");
+                Console.ReadKey(true);
+                return;
             }
 
-            if (tipoRegistro == "BLOQUEIO" || !idPaciente.HasValue)
+            if (infoAgendamento.TipoRegistro == "BLOQUEIO" || !infoAgendamento.IdPaciente.HasValue)
             {
                 Console.WriteLine("[ERRO] Esta ID de agendamento pertence a um bloqueio de agenda, não a uma consulta com paciente.");
                 Console.WriteLine("Pressione qualquer tecla para voltar...");
@@ -261,40 +228,27 @@ namespace AgendaiFisio.Services
                 return;
             }
 
-            if (status != "REALIZADO")
+            if (infoAgendamento.Status != "REALIZADO")
             {
-                string qUpd = "UPDATE agendamento SET status = 'REALIZADO' WHERE id_agendamento = @id";
-                using var cmdUpd = new SqlCommand(qUpd, conn);
-                cmdUpd.Parameters.AddWithValue("@id", idAgendamento);
-                cmdUpd.ExecuteNonQuery();
+                _agendamentoRepository.MarcarComoRealizado(idAgendamento);
                 Console.WriteLine("[INFO] Consulta marcada como REALIZADA.");
             }
 
-            string qPront = "SELECT id_prontuario FROM prontuario WHERE id_paciente = @paciente AND id_terapeuta = @terapeuta";
-            using var cmdPront = new SqlCommand(qPront, conn);
-            cmdPront.Parameters.AddWithValue("@paciente", idPaciente.Value); 
-            cmdPront.Parameters.AddWithValue("@terapeuta", _terapeuta.IdUsuario);
-            
-            object objPront = cmdPront.ExecuteScalar();
+            int? idProntuarioExistente = _prontuarioRepository.ObterIdProntuario(infoAgendamento.IdPaciente.Value, _terapeuta.IdUsuario);
             int idProntuario = 0;
 
-            if (objPront == null)
+            if (!idProntuarioExistente.HasValue)
             {
                 Console.WriteLine("[INFO] Nenhum prontuário anterior encontrado para este paciente. Criando um novo...");
                 Console.Write("Digite a descrição base do prontuário: ");
                 string desc = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(desc)) return;
 
-                string qInsPront = "INSERT INTO prontuario (id_paciente, id_terapeuta, versao, descricao) OUTPUT INSERTED.id_prontuario VALUES (@paciente, @terapeuta, 1, @desc)";
-                using var cmdIns = new SqlCommand(qInsPront, conn);
-                cmdIns.Parameters.AddWithValue("@paciente", idPaciente.Value);
-                cmdIns.Parameters.AddWithValue("@terapeuta", _terapeuta.IdUsuario);
-                cmdIns.Parameters.AddWithValue("@desc", desc);
-                idProntuario = (int)cmdIns.ExecuteScalar();
+                idProntuario = _prontuarioRepository.CriarProntuario(infoAgendamento.IdPaciente.Value, _terapeuta.IdUsuario, desc);
             }
             else
             {
-                idProntuario = (int)objPront;
+                idProntuario = idProntuarioExistente.Value;
             }
 
             Console.WriteLine("\n--- NOVA NOTA DE EVOLUÇÃO ---");
@@ -302,13 +256,7 @@ namespace AgendaiFisio.Services
             string textoEvolucao = Console.ReadLine();
             if (string.IsNullOrWhiteSpace(textoEvolucao)) return;
 
-            string qNota = "INSERT INTO nota_evolucao (id_prontuario, id_terapeuta, id_agendamento, texto_evolucao) VALUES (@pront, @terapeuta, @agen, @texto)";
-            using var cmdNota = new SqlCommand(qNota, conn);
-            cmdNota.Parameters.AddWithValue("@pront", idProntuario);
-            cmdNota.Parameters.AddWithValue("@terapeuta", _terapeuta.IdUsuario);
-            cmdNota.Parameters.AddWithValue("@agen", idAgendamento);
-            cmdNota.Parameters.AddWithValue("@texto", textoEvolucao);
-            cmdNota.ExecuteNonQuery();
+            _prontuarioRepository.AdicionarNotaEvolucao(idProntuario, _terapeuta.IdUsuario, idAgendamento, textoEvolucao);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("[SUCESSO] Prontuário e Nota de Evolução salvos com sucesso!");
@@ -346,7 +294,7 @@ namespace AgendaiFisio.Services
                     page.Header().Text($"Relatório de Consultas - {_terapeuta.Nome} ({mes:D2}/{ano})")
                         .SemiBold().FontSize(20).FontColor(Colors.Blue.Darken2);
 
-                    page.Page(p => p.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
+                    page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                     {
                         col.Item().Text("Abaixo está o detalhamento de todas as consultas agendadas e realizadas neste mês.");
                         col.Item().PaddingTop(10).Table(table =>
@@ -365,43 +313,25 @@ namespace AgendaiFisio.Services
                                 header.Cell().Text("Status").Bold();
                             });
 
-                            using var conn = DatabaseConnection.GetConnection();
-                            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-                            
-                            // QUERY CORRIGIDA PARA USAR 'hora_agenda' e 'data_agenda'
-                            string query = @"
-                                SELECT a.hora_agenda, p.nome, a.status, a.id_paciente, a.tipo_registro
-                                FROM agendamento a
-                                LEFT JOIN usuario p ON a.id_paciente = p.id_usuario
-                                WHERE a.id_terapeuta = @terapeuta AND MONTH(a.data_agenda) = @mes AND YEAR(a.data_agenda) = @ano
-                                ORDER BY a.hora_agenda ASC";
+                            List<AgendamentoDto> agendamentos = _agendamentoRepository.ObterAgendamentosDoTerapeutaPorMes(_terapeuta.IdUsuario, mes, ano);
 
-                            using var cmd = new SqlCommand(query, conn);
-                            cmd.Parameters.AddWithValue("@terapeuta", _terapeuta.IdUsuario);
-                            cmd.Parameters.AddWithValue("@mes", mes);
-                            cmd.Parameters.AddWithValue("@ano", ano);
-                            using var reader = cmd.ExecuteReader();
-
-                            while (reader.Read())
+                            foreach (var ag in agendamentos)
                             {
-                                DateTime data = reader.GetDateTime(0);
-                                string pac = reader.IsDBNull(1) ? "Nenhum" : reader.GetString(1);
-                                string stat = reader.GetString(2);
-                                int? idPac = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3);
-                                string tipoReg = reader.GetString(4);
+                                string pac = ag.NomePessoa;
+                                string stat = ag.Status;
 
-                                if (tipoReg == "BLOQUEIO" || idPac == _terapeuta.IdUsuario)
+                                if (ag.TipoRegistro == "BLOQUEIO" || ag.IdPaciente == _terapeuta.IdUsuario)
                                 {
                                     pac = "BLOQUEIO DE AGENDA";
                                     stat = "-";
                                 }
 
-                                table.Cell().Text(data.ToString("dd/MM/yyyy HH:mm"));
+                                table.Cell().Text(ag.HoraAgenda.ToString("dd/MM/yyyy HH:mm"));
                                 table.Cell().Text(pac);
                                 table.Cell().Text(stat);
                             }
                         });
-                    }));
+                    });
 
                     page.Footer().AlignCenter().Text(x =>
                     {
@@ -411,8 +341,8 @@ namespace AgendaiFisio.Services
                         x.TotalPages();
                     });
                 });
-            })
-            .GeneratePdf(filePath);
+            }) 
+            .GeneratePdf(filePath); 
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"\n[SUCESSO] Relatório PDF gerado com sucesso em: {filePath}");
@@ -420,61 +350,6 @@ namespace AgendaiFisio.Services
 
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey(true);
-        }
-
-        private void SalvarBloqueioNoBanco(DateTime data, int hora)
-        {
-            DateTime dataHoraCompleta = new DateTime(data.Year, data.Month, data.Day, hora, 0, 0);
-
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
-            string query = @"
-                INSERT INTO agendamento (id_paciente, id_terapeuta, data_agenda, hora_agenda, tipo_registro, status, descricao_sintomas) 
-                VALUES (NULL, @idTerapeuta, @dataAgenda, @horaAgenda, 'BLOQUEIO', 'CONFIRMADO', 'Horário bloqueado pelo terapeuta.')";
-            
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@idTerapeuta", _terapeuta.IdUsuario);
-            cmd.Parameters.AddWithValue("@dataAgenda", data.Date); 
-            cmd.Parameters.AddWithValue("@horaAgenda", dataHoraCompleta); 
-
-            cmd.ExecuteNonQuery();
-        }
-
-        private Dictionary<int, string> ObterStatusHorariosDoBanco(DateTime data)
-        {
-            var statusMap = new Dictionary<int, string>();
-
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
-            string query = @"
-                SELECT DATEPART(HOUR, a.hora_agenda), a.tipo_registro, u.nome 
-                FROM agendamento a
-                LEFT JOIN usuario u ON a.id_paciente = u.id_usuario
-                WHERE CAST(a.data_agenda AS DATE) = @data AND a.status != 'CANCELADO'";
-            
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@data", data.Date);
-
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                int hora = reader.GetInt32(0);
-                string tipo = reader.GetString(1); 
-                string nomePaciente = reader.IsDBNull(2) ? "" : reader.GetString(2);
-
-                if (tipo == "BLOQUEIO")
-                {
-                    statusMap[hora] = "BLOQUEADO";
-                }
-                else
-                {
-                    statusMap[hora] = nomePaciente; 
-                }
-            }
-
-            return statusMap;
         }
     }
 }

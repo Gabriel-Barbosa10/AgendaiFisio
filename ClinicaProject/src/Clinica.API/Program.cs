@@ -2,6 +2,7 @@ using System;
 using AgendaiFisio.Services;
 using AgendaiFisio.Models;
 using AgendaiFisio.Data;
+using AgendaiFisio.Data.Repositories;
 
 namespace AgendaiFisio
 {
@@ -9,17 +10,17 @@ namespace AgendaiFisio
     {
         static void Main(string[] args)
         {
+            Console.Clear();
             Console.WriteLine("=======================================");
             Console.WriteLine("    BEM VINDO AO AGENDAI FISIO");
             Console.WriteLine("=======================================");
 
-            // Testar a conexão com o banco ao iniciar
-            //DatabaseConnection.TestConnection();
-            
-            // Inserir dados de teste caso o banco esteja vazio
-            // DatabaseConnection.SeedDatabase();
+            // Dependências
+            IUsuarioRepository usuarioRepository = new UsuarioRepository();
+            IAgendamentoRepository agendamentoRepository = new AgendamentoRepository();
+            IProntuarioRepository prontuarioRepository = new ProntuarioRepository();
 
-            AuthService authService = new AuthService();
+            AuthService authService = new AuthService(usuarioRepository);
 
             while (true)
             {
@@ -37,15 +38,11 @@ namespace AgendaiFisio
                     
                     if (usuarioLogado != null)
                     {
-                        if (usuarioLogado.TipoPerfil == "PACIENTE")
+                        IMenuService menuService = CriarMenuService(usuarioLogado, usuarioRepository, agendamentoRepository, prontuarioRepository);
+                        
+                        if (menuService != null)
                         {
-                            var pacienteService = new PacienteService(usuarioLogado);
-                            pacienteService.Menu();
-                        }
-                        else if (usuarioLogado.TipoPerfil == "TERAPEUTA")
-                        {
-                            var terapeutaService = new TerapeutaService(usuarioLogado);
-                            terapeutaService.Menu();
+                            menuService.Menu();
                         }
                     }
                 }
@@ -63,6 +60,19 @@ namespace AgendaiFisio
                     Console.WriteLine("Opção inválida.");
                 }
             }
+        }
+
+        private static IMenuService CriarMenuService(Usuario usuario, IUsuarioRepository usuarioRepo, IAgendamentoRepository agendamentoRepo, IProntuarioRepository prontuarioRepo)
+        {
+            if (usuario.TipoPerfil == "PACIENTE")
+            {
+                return new PacienteService(usuario, usuarioRepo, agendamentoRepo);
+            }
+            else if (usuario.TipoPerfil == "TERAPEUTA")
+            {
+                return new TerapeutaService(usuario, agendamentoRepo, prontuarioRepo);
+            }
+            return null;
         }
     }
 }

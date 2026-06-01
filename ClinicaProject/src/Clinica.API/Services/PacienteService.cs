@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Data.SqlClient;
 using AgendaiFisio.Models;
-using AgendaiFisio.Data;
+using AgendaiFisio.Data.Repositories;
 
 namespace AgendaiFisio.Services
 {
-    public class PacienteService
+    public class PacienteService : IMenuService
     {
         private readonly Usuario _paciente;
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IAgendamentoRepository _agendamentoRepository;
 
-        public PacienteService(Usuario paciente)
+        public PacienteService(Usuario paciente, IUsuarioRepository usuarioRepository, IAgendamentoRepository agendamentoRepository)
         {
             _paciente = paciente;
+            _usuarioRepository = usuarioRepository;
+            _agendamentoRepository = agendamentoRepository;
         }
 
         public void Menu()
@@ -46,28 +49,19 @@ namespace AgendaiFisio.Services
             Console.WriteLine("\n--- AGENDAR CONSULTA ---");
             Console.WriteLine("(Pressione ENTER vazio a qualquer momento para cancelar e voltar ao menu)\n");
             
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
             // 1. LISTAR TERAPEUTAS DISPONÍVEIS
-            string qTerapeuta = "SELECT id_usuario, nome, crefito FROM usuario WHERE tipo_perfil = 'TERAPEUTA'";
-            using var cmdTerapeuta = new SqlCommand(qTerapeuta, conn);
-            using var readerTerapeuta = cmdTerapeuta.ExecuteReader();
+            List<Terapeuta> terapeutas = _usuarioRepository.ListarTerapeutas();
             
             Console.WriteLine("Terapeutas Disponíveis:");
-            bool temTerapeuta = false;
             var terapeutasValidos = new List<int>();
 
-            while (readerTerapeuta.Read())
+            foreach (var terapeuta in terapeutas)
             {
-                temTerapeuta = true;
-                int id = readerTerapeuta.GetInt32(0);
-                terapeutasValidos.Add(id);
-                Console.WriteLine($"ID: {id} | Nome: {readerTerapeuta.GetString(1)} | CREFITO: {readerTerapeuta.GetString(2)}");
+                terapeutasValidos.Add(terapeuta.IdUsuario);
+                Console.WriteLine($"ID: {terapeuta.IdUsuario} | Nome: {terapeuta.Nome} | CREFITO: {terapeuta.Crefito}");
             }
-            readerTerapeuta.Close();
 
-            if (!temTerapeuta)
+            if (terapeutas.Count == 0)
             {
                 Console.WriteLine("Nenhum terapeuta disponível no sistema. Pressione qualquer tecla para voltar...");
                 Console.ReadKey(true);
@@ -125,7 +119,7 @@ namespace AgendaiFisio.Services
             DateTime dataConsulta = proximosDias[opcaoData - 1];
 
             // 4. BUSCAR COMPROMISSOS DO TERAPEUTA SELECIONADO NAQUELA DATA
-            List<int> horasOcupadas = ObterHorariosOcupadosDoTerapeuta(idTerapeuta, dataConsulta);
+            List<int> horasOcupadas = _agendamentoRepository.ObterHorariosOcupadosDoTerapeuta(idTerapeuta, dataConsulta);
 
             // 5. EXIBIR VITRINE DE HORÁRIOS PARA O PACIENTE
             Console.WriteLine($"\nHorários para o dia {dataConsulta:dd/MM/yyyy}:");
@@ -178,17 +172,7 @@ namespace AgendaiFisio.Services
             string sintomas = Console.ReadLine()?.Trim();
 
             // 7. SALVAR AGENDAMENTO
-            string qInsert = @"
-                INSERT INTO agendamento (id_paciente, id_terapeuta, data_agenda, hora_agenda, tipo_registro, status, descricao_sintomas) 
-                VALUES (@paciente, @terapeuta, @dataAgenda, @horaAgenda, 'CONSULTA', 'PENDENTE', @sintomas)";
-            
-            using var cmdInsert = new SqlCommand(qInsert, conn);
-            cmdInsert.Parameters.AddWithValue("@paciente", _paciente.IdUsuario);
-            cmdInsert.Parameters.AddWithValue("@terapeuta", idTerapeuta);
-            cmdInsert.Parameters.AddWithValue("@dataAgenda", dataConsulta.Date);
-            cmdInsert.Parameters.AddWithValue("@horaAgenda", dataHoraCompleta);
-            cmdInsert.Parameters.AddWithValue("@sintomas", string.IsNullOrWhiteSpace(sintomas) ? (object)DBNull.Value : sintomas);
-            cmdInsert.ExecuteNonQuery();
+            _agendamentoRepository.CriarAgendamento(_paciente.IdUsuario, idTerapeuta, dataConsulta, dataHoraCompleta, "CONSULTA", "PENDENTE", sintomas);
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n[SUCESSO] Consulta agendada com sucesso!");
@@ -202,30 +186,14 @@ namespace AgendaiFisio.Services
         {
             Console.Clear();
             Console.WriteLine("\n--- MINHAS CONSULTAS ---");
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
 
-            string query = @"
-                SELECT a.id_agendamento, a.hora_agenda, t.nome, a.status 
-                FROM agendamento a
-                JOIN usuario t ON a.id_terapeuta = t.id_usuario
-                WHERE a.id_paciente = @paciente AND a.tipo_registro = 'CONSULTA'
-                ORDER BY a.hora_agenda DESC";
-            
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@paciente", _paciente.IdUsuario);
-            using var reader = cmd.ExecuteReader();
+            List<AgendamentoDto> agendamentos = _agendamentoRepository.ObterConsultasDoPaciente(_paciente.IdUsuario);
 
             bool achou = false;
-            while (reader.Read())
+            foreach (var ag in agendamentos)
             {
                 achou = true;
-                int id = reader.GetInt32(0);
-                DateTime horaAgenda = reader.GetDateTime(1);
-                string terapeuta = reader.GetString(2);
-                string status = reader.GetString(3);
-
-                Console.WriteLine($"Consulta #{id} | Data/Hora: {horaAgenda:dd/MM/yyyy HH:mm} | Terapeuta: {terapeuta} | Status: {status}");
+                Console.WriteLine($"Consulta #{ag.IdAgendamento} | Data/Hora: {ag.HoraAgenda:dd/MM/yyyy HH:mm} | Terapeuta: {ag.NomePessoa} | Status: {ag.Status}");
             }
 
             if (!achou)
@@ -235,29 +203,6 @@ namespace AgendaiFisio.Services
 
             Console.WriteLine("\nPressione qualquer tecla para voltar ao menu...");
             Console.ReadKey(true);
-        }
-
-        private List<int> ObterHorariosOcupadosDoTerapeuta(int idTerapeuta, DateTime data)
-        {
-            var horas = new List<int>();
-            using var conn = DatabaseConnection.GetConnection();
-            if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-
-            string query = @"
-                SELECT DATEPART(HOUR, hora_agenda) 
-                FROM agendamento 
-                WHERE id_terapeuta = @idTerapeuta AND data_agenda = @data AND status != 'CANCELADO'";
-
-            using var cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@idTerapeuta", idTerapeuta);
-            cmd.Parameters.AddWithValue("@data", data.Date);
-
-            using var reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                horas.Add(reader.GetInt32(0));
-            }
-            return horas;
         }
     }
 }
