@@ -1,20 +1,37 @@
-CREATE DATABASE DBAgendaiFisio GO
+CREATE DATABASE AgendaiFisioDB
+
+GO
+
+USE AgendaiFisioDB
+GO
+
 CREATE TABLE usuario (
     id_usuario INT PRIMARY KEY IDENTITY (1, 1),
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     cpf VARCHAR(14) NOT NULL UNIQUE,
-    senha VARCHAR(20) NOT NULL,
-    crefito VARCHAR(9) UNIQUE,
+    senha VARCHAR(100) NOT NULL,
+    crefito VARCHAR(9),
     tipo_perfil VARCHAR(10) NOT NULL CHECK (tipo_perfil IN ('PACIENTE', 'TERAPEUTA')),
     aceite_lgpd BIT NOT NULL DEFAULT 0,
     CONSTRAINT CK_Senha_Min CHECK (LEN (senha) >= 8)
 );
+GO
+
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE UNIQUE NONCLUSTERED INDEX IX_Usuario_Crefito 
+ON usuario(crefito) 
+WHERE crefito IS NOT NULL;
 
 CREATE TABLE agendamento (
     id_agendamento INT PRIMARY KEY IDENTITY (1, 1),
-    id_paciente INT NOT NULL,
+    id_paciente INT NULL,
     id_terapeuta INT NOT NULL,
+    data_agenda DATE NOT NULL,
+    hora_agenda DATETIME  NOT NULL,
+    tipo_registro VARCHAR(20) NOT NULL DEFAULT 'CONSULTA',
+    descricao_sintomas VARCHAR(1000) NULL,
     status VARCHAR(15) NOT NULL DEFAULT 'PENDENTE' CHECK (
         status IN (
             'PENDENTE',
@@ -54,6 +71,9 @@ CREATE TABLE arquivo_exame (
     id_arquivo INT PRIMARY KEY IDENTITY (1, 1),
     caminho_storage VARCHAR(500) NOT NULL,
     tamanho_bytes BIGINT NULL,
-    id_prontuario INT NULL,
+    id_prontuario INT NOT NULL,
     CONSTRAINT FK_Arquivo_Prontuario FOREIGN KEY (id_prontuario) REFERENCES prontuario (id_prontuario)
 );
+
+
+SELECT * FROM agendamento;
