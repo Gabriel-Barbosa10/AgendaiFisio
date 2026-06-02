@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendar Sessão - AgendaiFisio</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="responsive.css">
 </head>
 <body>
 
@@ -16,11 +17,11 @@
         </div>
         
         <div class="perfil-container" id="perfilMenu">
-            <div class="avatar">DG</div>
+            <div class="avatar">AC</div>
             <div class="dropdown-conta">
                 <div class="user-header">
-                    <strong>Davi Gusmão</strong>
-                    <span>davigusmao@email.com</span>
+                    <strong>Arnaldo Candido</strong>
+                    <span>arnaldocandido@email.com</span>
                 </div>
                 <hr>
                 <a href="TelaPaciente.html">👤 Ver Meu Perfil</a>
@@ -39,8 +40,8 @@
                 <span class="badge">Paciente Ativo</span>
                 <h2>Dados do Paciente</h2>
                 <div class="info-paciente">
-                    <p><strong>Nome:</strong> Davi Gusmão</p>
-                    <p><strong>Idade:</strong> 19 anos</p>
+                    <p><strong>Nome:</strong> Arnaldo Candido</p>
+                    <p><strong>Idade:</strong> 37 anos</p>
                     <p><strong>Status:</strong> Plano Liberado</p>
                 </div>
             </article>
@@ -113,30 +114,30 @@
             <button id="btnProximoPasso" class="btn-confirmar-full" type="button">Continuar</button>
         </div>
     </dialog>
-<!-- POPUP 1.5: FORMULÁRIO DE SINTOMAS (TRIAGEM) -->
-<dialog id="modalTriagem" class="modal-moderno">
-    <div class="modal-header">
-        <h2>📋 Conte-nos o que sente</h2>
-        <button class="btn-fechar-x" type="button" onclick="this.closest('dialog').close()">×</button>
-    </div>
-    <div class="modal-body">
-        <!-- DIV DE ERRO ADICIONADA AQUI -->
-        <div id="erroTriagem" class="mensagem-error-modal" style="display: none; background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-            <span id="textoErroTriagem">⚠️ Por favor, descreva seus sintomas.</span>
-        </div>
-    </div>
 
-        <p style="color: #64748b; margin-bottom: 15px;">Essas informações ajudam o especialista a se preparar para sua consulta.</p>
-        
-        <div class="passo">
-               <div class="campo-selecao">
-        <label for="tiposSintomas">Sintomas</label>
-            <textarea class="area-digitacao" placeholder="Descreva seus sintomas para agilizar no atendimento."></textarea>
+    <!-- POPUP 1.5: FORMULÁRIO DE SINTOMAS (TRIAGEM) -->
+    <dialog id="modalTriagem" class="modal-moderno">
+        <div class="modal-header">
+            <h2>📋 Conte-nos o que sente</h2>
+            <button class="btn-fechar-x" type="button" onclick="this.closest('dialog').close()">×</button>
         </div>
-    </div>
-        <button id="btnFinalizarTriagem" class="btn-confirmar-full" type="button" style="margin-top: 10px;">Salvar e Confirmar Agendamento</button>
-    </div>
-</dialog>
+        <div class="modal-body">
+            <!-- DIV DE ERRO ADICIONADA AQUI -->
+            <div id="erroTriagem" class="mensagem-error-modal" style="display: none; background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+                <span id="textoErroTriagem">⚠️ Por favor, descreva seus sintomas.</span>
+            </div>
+
+            <p style="color: #64748b; margin-bottom: 15px;">Essas informações ajudam o especialista a se preparar para sua consulta.</p>
+            
+            <div class="passo">
+                <div class="campo-selecao">
+                    <label for="tiposSintomas">Sintomas</label>
+                    <textarea class="area-digitacao" placeholder="Descreva seus sintomas para agilizar no atendimento."></textarea>
+                </div>
+            </div>
+            <button id="btnFinalizarTriagem" class="btn-confirmar-full" type="button" style="margin-top: 10px;">Salvar e Confirmar Agendamento</button>
+        </div>
+    </dialog>
 
 
     <!-- POPUP 3: NAVEGAÇÃO PÓS-AGENDAMENTO -->
@@ -158,6 +159,7 @@
         <span id="msgErro">⚠️ Selecione um especialista antes de agendar.</span>
     </div>
 
+    <script src="mobile.js"></script>
     <script src="index.js"></script>
 </body>
 </html>

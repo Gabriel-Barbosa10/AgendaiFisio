@@ -2,7 +2,7 @@
    LÓGICA DA TELA DO PACIENTE (MEUS AGENDAMENTOS)
    ============================================================ */
 
-const pacienteLogado = "Davi Gusmão";
+const pacienteLogado = "Arnaldo Candido";
 
 const elementosPaciente = {
     listaConsultas: document.getElementById("listaConsultas"),

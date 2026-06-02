@@ -171,7 +171,7 @@ elements.btnFinalizarTriagem.onclick = () => {
 
     const novaConsulta = {
         id: Date.now(),
-        nome: "Davi Gusmão",
+        nome: "Arnaldo Candido",
         especialista: elements.modalEspecialista.value,
         data: dataFormatada,
         dataISO: dataRaw,
